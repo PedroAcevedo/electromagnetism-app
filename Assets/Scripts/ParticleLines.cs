@@ -37,7 +37,7 @@ public class ParticleLines
     private float eps;
     private float EPSILON;
     private float e = 1.60217733E-19f;
-    private int linesLimit = 8;
+    private int linesLimit = 10;
 
     public ParticleLines(GameObject[] particles, float[] charges)
     {
@@ -476,11 +476,19 @@ public class ParticleLines
 
         for (int i = 0; i < charges.Length; i++)
         {
-            float[] E = pointCharge(charges[i] , particles[i].transform.position, x, y, z);
+            float xp = particles[i].transform.position.x;
+            float yp = particles[i].transform.position.y;
+            float zp = particles[i].transform.position.z;
 
-            Exy[0] = Exy[0] + E[0];
-            Exy[1] = Exy[1] + E[1];
-            Exy[2] = Exy[2] + E[2];
+            if (xp > -linesLimit && xp < linesLimit && yp > -linesLimit && yp < linesLimit
+                     && zp > -linesLimit && zp < linesLimit)
+            {
+                float[] E = pointCharge(charges[i], particles[i].transform.position, x, y, z);
+
+                Exy[0] = Exy[0] + E[0];
+                Exy[1] = Exy[1] + E[1];
+                Exy[2] = Exy[2] + E[2];
+            }
         }
 
         return Exy;

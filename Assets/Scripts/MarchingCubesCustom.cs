@@ -120,6 +120,8 @@ public class MarchingCubesCustom : MonoBehaviour
 
         for (int i = 0; i < charges.Length; ++i)
         {
+            particles[i].SetActive(false);
+
             if (charges[i] < 0)
             {
                 particles[i].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
@@ -176,13 +178,6 @@ public class MarchingCubesCustom : MonoBehaviour
             //StartCoroutine(MarchingCubesRoutine());
         }
 
-        if (OVRInput.GetDown(OVRInput.Button.Two))
-        {
-            showMenu = !showMenu;
-            MenuCanvas.SetActive(showMenu);
-            RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
-        }
-
     }
 
     // Update is called once per frame
@@ -211,11 +206,14 @@ public class MarchingCubesCustom : MonoBehaviour
 
     int findQuadrant(Vector3 point)
     {
-        for (int i = 0; i < QuadrantsLimits.Count; ++i)
+        if (point.x >= MINX && point.x <= MAXX && point.y >= MINY && point.y <= MAXY && point.z >= MINZ && point.z <= MAXZ)
         {
-            if (Vector3.Distance(QuadrantsLimits[i], point) <= (GridSize * 2) - 1)
+            for (int i = 0; i < QuadrantsLimits.Count; ++i)
             {
-                return i;
+                if (Vector3.Distance(QuadrantsLimits[i], point) <= (GridSize * 2) - 1)
+                {
+                    return i;
+                }
             }
         }
 
@@ -708,6 +706,44 @@ public class MarchingCubesCustom : MonoBehaviour
             particles[i].GetComponent<OVRGrabbable>().enabled = !particles[i].GetComponent<OVRGrabbable>().enabled;
             particles[i].GetComponent<SphereCollider>().enabled = !particles[i].GetComponent<SphereCollider>().enabled;
         }
+    }
+
+    public void onModeA()
+    {
+        showLines = true;
+        particleInteraction = true;
+        MenuCanvas.SetActive(false);
+        RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
+
+
+        for (int i = 0; i < charges.Length; ++i)
+        {
+            particles[i].SetActive(true);
+        }
+
+        //Mode A conditions
+        hapticFeedback = false;
+        simpleMode = false;
+        showSurface = true;
+    }
+
+    public void onModeB()
+    {
+        showLines = true;
+        particleInteraction = true;
+        MenuCanvas.SetActive(false);
+        RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
+
+        for (int i = 0; i < charges.Length; ++i)
+        {
+            particles[i].SetActive(true);
+        }
+
+        //Mode B conditions
+        hapticFeedback = true;
+        simpleMode = true;
+        Mode2D = false;
+        showSurface = true;
     }
 
     public float IsInMyCube(Vector3 gridPosition, Vector3 location, int index)
