@@ -713,7 +713,7 @@ public class MarchingCubesCustom : MonoBehaviour
         showLines = true;
         particleInteraction = true;
         MenuCanvas.SetActive(false);
-        RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
+        //RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
 
 
         for (int i = 0; i < charges.Length; ++i)
@@ -732,7 +732,7 @@ public class MarchingCubesCustom : MonoBehaviour
         showLines = true;
         particleInteraction = true;
         MenuCanvas.SetActive(false);
-        RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
+        //RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
 
         for (int i = 0; i < charges.Length; ++i)
         {
