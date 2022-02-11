@@ -102,7 +102,7 @@ public class ParticleLines
         //GameObject.Destroy(goLineRenderer, duration);
     }
 
-    void AddNewLineRendererList(Color color, List<Vector3> pointList)
+    void AddNewLineRendererList(Color color, List<Vector3> pointList, float charge)
     {
         GameObject go = new GameObject($"LineRenderer_particle_1");
         LineRenderer goLineRenderer = go.AddComponent<LineRenderer>();
@@ -119,10 +119,21 @@ public class ParticleLines
         {
             int numberArrow = pointList.Count / 6;
 
-            for (int i = 1; i < pointList.Count - numberArrow; i += numberArrow)
+            if(charge > 0)
             {
-                AddArrow(pointList[i], pointList[i + 1]);
+                for (int i = 1; i < pointList.Count - numberArrow; i += numberArrow)
+                {
+                    AddArrow(pointList[i], pointList[i + 1]);
+                }
             }
+            else
+            {
+                for (int i = pointList.Count - numberArrow; i > 1; i -= numberArrow)
+                {
+                    AddArrow(pointList[i], pointList[i - 1]);
+                }
+            }
+
         }
 
         lines.Add(go);
@@ -361,7 +372,7 @@ public class ParticleLines
 
             }
 
-            AddNewLineRendererList(new Color(1.0f, 0.0f, 0.0f), lineField);
+            AddNewLineRendererList(new Color(1.0f, 0.0f, 0.0f), lineField, charges[index]);
 
         }
 
@@ -427,7 +438,7 @@ public class ParticleLines
 
             }
 
-            AddNewLineRendererList(new Color(1.0f, 0.0f, 0.0f), lineField);
+            AddNewLineRendererList(new Color(1.0f, 0.0f, 0.0f), lineField, charges[index]);
 
         }
 

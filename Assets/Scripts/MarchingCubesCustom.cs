@@ -19,7 +19,10 @@ public class MarchingCubesCustom : MonoBehaviour
     public float[] charges;
     public GameObject RHand;            // VR right controller
     public GameObject LHand;            // VR left controller
+    public UnityEngine.UI.Text partLabel;
     public GameObject MenuCanvas;
+    public GameObject SceneControl;
+
 
     //For debugging 
     public bool DEBUG_GRID = false;
@@ -87,6 +90,13 @@ public class MarchingCubesCustom : MonoBehaviour
     // Lines class
     ParticleLines lineController;
 
+    // For Scene control
+    List<String> partName = new List<string>();
+    int[] numberOfParticles = { 2, 2, 2, 3, 3 };
+    int[] negativeCharges = { 0, 2, 1, 2, 1 };
+    GameObject[] particlesOnScene;
+    float[] chargesOnScene;
+    int currentScene = 0;
 
     //Update actual view
     bool updateSurface = false;
@@ -121,12 +131,13 @@ public class MarchingCubesCustom : MonoBehaviour
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].SetActive(false);
-
-            if (charges[i] < 0)
-            {
-                particles[i].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
-            }
         }
+
+
+        // Select the scene
+        particlesOnScene = (UnityEngine.GameObject[]) particles.Clone();
+        chargesOnScene =  (float[]) charges.Clone();
+        setupCurrentScene();
 
         nX = dimension;
         nY = dimension;
@@ -172,12 +183,67 @@ public class MarchingCubesCustom : MonoBehaviour
             findHandsVibrationOptimized();
         }
 
-        if (OVRInput.GetDown(OVRInput.Button.One))
+        //if (OVRInput.GetDown(OVRInput.Button.One))
+        //{
+        //    //StartCoroutine(MarchingCubesRoutine());
+        //}
+
+
+        // Test in PC
+
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    onModeA();
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.B))
+        //{
+        //    onModeB();
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.N))
+        //{
+        //    ChangeScene();
+        //}
+    }
+
+    //Setup the Scene
+    void setupCurrentScene()
+    {
+        GameObject[] tempParticles = new GameObject[numberOfParticles[currentScene]];
+        float[] tempCharges = new float[numberOfParticles[currentScene]];
+
+
+        int negatives = negativeCharges[currentScene];
+
+        for (int i = 0; i < tempParticles.Length; ++i)
         {
-            updateSurface = true;
-            //StartCoroutine(MarchingCubesRoutine());
+            tempParticles[i] = particlesOnScene[i];
+
+            int signal = 1;
+
+            if(negatives > 0)
+            {
+                signal = -1;
+                negatives--;
+            }
+
+            tempCharges[i] = signal*chargesOnScene[i];
+
+
+            if (tempCharges[i] < 0)
+            {
+                particlesOnScene[i].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
+            } else
+            {
+                particlesOnScene[i].GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+            }
         }
 
+        particles = tempParticles;
+        charges = tempCharges;
+        n = particles.Length;
+        partLabel.GetComponent<UnityEngine.UI.Text>().text = "Part " + (currentScene + 1);
     }
 
     // Update is called once per frame
@@ -713,6 +779,7 @@ public class MarchingCubesCustom : MonoBehaviour
         showLines = true;
         particleInteraction = true;
         MenuCanvas.SetActive(false);
+        SceneControl.SetActive(true);
         //RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
 
 
@@ -732,6 +799,7 @@ public class MarchingCubesCustom : MonoBehaviour
         showLines = true;
         particleInteraction = true;
         MenuCanvas.SetActive(false);
+        SceneControl.SetActive(true);
         //RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
 
         for (int i = 0; i < charges.Length; ++i)
@@ -743,7 +811,36 @@ public class MarchingCubesCustom : MonoBehaviour
         hapticFeedback = true;
         simpleMode = true;
         Mode2D = false;
-        showSurface = true;
+        showSurfaceState(true);
+    }
+
+    public void updateIsosurface()
+    {
+        updateSurface = true;
+    }
+
+    public void ChangeScene()
+    {
+        currentScene++;
+
+        for (int i = 0; i < charges.Length; ++i)
+        {
+            particles[i].SetActive(false);
+        }
+
+        setupCurrentScene();
+
+        for (int i = 0; i < charges.Length; ++i)
+        {
+            particles[i].SetActive(true);
+        }
+
+        lineController.CleanLines();
+        lineController = new ParticleLines(particles, charges);
+        if (showLines)
+        {
+            lineController.Draw(this.Mode2D);
+        }
     }
 
     public float IsInMyCube(Vector3 gridPosition, Vector3 location, int index)
