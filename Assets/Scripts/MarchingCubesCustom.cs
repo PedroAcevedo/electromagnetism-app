@@ -91,9 +91,9 @@ public class MarchingCubesCustom : MonoBehaviour
     ParticleLines lineController;
 
     // For Scene control
-    List<String> partName = new List<string>();
     int[] numberOfParticles = { 2, 2, 2, 3, 3 };
     int[] negativeCharges = { 0, 2, 1, 2, 1 };
+    Vector3[] initialPositions = { new Vector3(0.0f, 3.0f, 0.0f), new Vector3(-3.0f, 0.0f, 0.0f), new Vector3(3.0f, 0.0f, 0.0f)};
     GameObject[] particlesOnScene;
     float[] chargesOnScene;
     int currentScene = 0;
@@ -167,6 +167,11 @@ public class MarchingCubesCustom : MonoBehaviour
                 {
                     particles[i].transform.hasChanged = false;
                     lineController.Draw(this.Mode2D);
+                    if (showSurface)
+                    {
+                        if(particles[i].GetComponent<OVRGrabbable>().isGrabbed)
+                            showSurfaceState(false);
+                    }
                     break;
                 }
             }
@@ -791,7 +796,7 @@ public class MarchingCubesCustom : MonoBehaviour
         //Mode A conditions
         hapticFeedback = false;
         simpleMode = false;
-        showSurface = true;
+        showSurfaceState(true);
     }
 
     public void onModeB()
@@ -810,37 +815,47 @@ public class MarchingCubesCustom : MonoBehaviour
         //Mode B conditions
         hapticFeedback = true;
         simpleMode = true;
-        Mode2D = false;
+        //Mode2D = false;
         showSurfaceState(true);
     }
 
     public void updateIsosurface()
     {
         updateSurface = true;
+        showSurface = true;
     }
 
     public void ChangeScene()
     {
         currentScene++;
 
-        for (int i = 0; i < charges.Length; ++i)
+        if(currentScene < numberOfParticles.Length)
         {
-            particles[i].SetActive(false);
-        }
+            for (int i = 0; i < charges.Length; ++i)
+            {
+                particles[i].SetActive(false);
+            }
 
-        setupCurrentScene();
+            showSurfaceState(false);
 
-        for (int i = 0; i < charges.Length; ++i)
-        {
-            particles[i].SetActive(true);
-        }
+            setupCurrentScene();
 
-        lineController.CleanLines();
-        lineController = new ParticleLines(particles, charges);
-        if (showLines)
-        {
-            lineController.Draw(this.Mode2D);
+            for (int i = 0; i < charges.Length; ++i)
+            {
+                particles[i].SetActive(true);
+                particles[i].transform.position = initialPositions[i];
+            }
+
+            lineController.CleanLines();
+            lineController = new ParticleLines(particles, charges);
+            if (showLines)
+            {
+                lineController.Draw(this.Mode2D);
+            }
+
+            updateIsosurface();
         }
+        
     }
 
     public float IsInMyCube(Vector3 gridPosition, Vector3 location, int index)
