@@ -176,6 +176,18 @@ public class MarchingCubesCustom : MonoBehaviour
                 }
             }
 
+            bool isStatic = true;
+
+            for (int i = 0; i < particles.Length; ++i)
+            {
+                isStatic = isStatic && !particles[i].GetComponent<OVRGrabbable>().isGrabbed;
+            }
+
+
+            if (!showSurface && isStatic)
+            {
+                updateIsosurface();
+            }
         }
 
     }
@@ -254,7 +266,7 @@ public class MarchingCubesCustom : MonoBehaviour
     // Update is called once per frame
     void ClearMeshData()
     {
-        //vertices.Clear();
+        vertices.Clear();
         triangles = new Int32[numTriangles*3];
         nodes.Clear();
     }
