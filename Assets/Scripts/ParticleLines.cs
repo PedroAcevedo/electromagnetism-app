@@ -454,7 +454,7 @@ public class ParticleLines
 
     float[] pointCharge(float charge, Vector3 position, float x, float y, float z)
     {
-        float distance = (float)Math.Pow(Math.Pow(x - position.x, 2.0f) + Math.Pow(y - position.y, 2.0f) + Math.Pow(z - position.z, 2.0f), 1.5f);
+        float distance = (float)Math.Pow(Math.Pow(x - position.x, 2.0f) + Math.Pow(y - position.y, 2.0f) + Math.Pow(z - position.z, 2.0f), 0.5f);
 
         float[] chargeOnPoint = new float[3];
 
@@ -477,7 +477,7 @@ public class ParticleLines
         return chargeOnPoint;
     }
 
-    float[] ETotal(float x, float y, float z)
+    public float[] ETotal(float x, float y, float z)
     {
         float[] Exy = new float[3];
 
