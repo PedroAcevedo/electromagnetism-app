@@ -96,7 +96,7 @@ public class MarchingCubesCustom : MonoBehaviour
     Vector3[] initialPositions = { new Vector3(0.0f, 3.0f, 0.0f), new Vector3(-3.0f, 0.0f, 0.0f), new Vector3(3.0f, 0.0f, 0.0f)};
     GameObject[] particlesOnScene;
     float[] chargesOnScene;
-    int currentScene = 3;
+    int currentScene = 0;
     private Transform MainCamera;
     private GameObject[] particleSignText;
 

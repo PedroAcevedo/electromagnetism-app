@@ -33,7 +33,7 @@ public class ParticleLines
     private SHOIntegrator theIntegrator;
     private double t = 0.0;
     private double h = 0.01;
-    private int FIELD_LINES = 10;
+    private int FIELD_LINES = 6;
     private float eps;
     private float EPSILON;
     private float e = 1.60217733E-19f;
@@ -117,7 +117,15 @@ public class ParticleLines
 
         if (this.showForces)
         {
-            int numberArrow = pointList.Count / 6;
+            int numberArrow = pointList.Count / 4;
+
+            float distances = Vector2.Distance(new Vector2(pointList[0].x, pointList[0].y), new Vector2(pointList[pointList.Count - 1].x, pointList[pointList.Count - 1].y))
+                + Vector2.Distance(new Vector2(pointList[0].x, pointList[0].y), new Vector2(pointList[(pointList.Count / 2)].x, pointList[(pointList.Count / 2)].y));
+
+            if (inParticle(pointList[pointList.Count - 1], distances < 20))
+            {
+                numberArrow = pointList.Count / (20 - (int)distances);
+            }
 
             if(charge > 0)
             {
@@ -137,6 +145,22 @@ public class ParticleLines
         }
 
         lines.Add(go);
+    }
+
+    bool inParticle(Vector3 position, bool distances)
+    {
+        if(distances)
+        {
+            for (int i = 0; i < particles.Length; i++)
+            {
+                if (Vector2.Distance(new Vector2(particles[i].transform.position.x, particles[i].transform.position.y), new Vector2(position.x, position.y)) < 0.25)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     List<Vector3> BezierCurve(Vector3 start, Vector3 end, int vertexCount, int linePosition)
