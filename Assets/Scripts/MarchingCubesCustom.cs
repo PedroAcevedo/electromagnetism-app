@@ -97,6 +97,8 @@ public class MarchingCubesCustom : MonoBehaviour
     GameObject[] particlesOnScene;
     float[] chargesOnScene;
     int currentScene = 3;
+    private Transform MainCamera;
+    private GameObject[] particleSignText;
 
     //Update actual view
     bool updateSurface = false;
@@ -128,9 +130,12 @@ public class MarchingCubesCustom : MonoBehaviour
             QuadrantsElements.Add("");
         }
 
+        particleSignText = new GameObject[charges.Length];
+
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].SetActive(false);
+            particleSignText[i] = particles[i].transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
             charges[i] = charges[i]*1e-9f;
         }
 
@@ -138,6 +143,7 @@ public class MarchingCubesCustom : MonoBehaviour
         // Select the scene
         particlesOnScene = (UnityEngine.GameObject[]) particles.Clone();
         chargesOnScene =  (float[]) charges.Clone();
+        MainCamera = GameObject.Find("Main Camera").transform;
         setupCurrentScene();
 
         nX = dimension;
@@ -193,7 +199,6 @@ public class MarchingCubesCustom : MonoBehaviour
                 updateIsosurface();
             }
         }
-
     }
 
     void Update()
@@ -204,31 +209,29 @@ public class MarchingCubesCustom : MonoBehaviour
             findHandsVibrationOptimized();
         }
 
-        particles[1].transform.LookAt(GameObject.Find("XR Rig").transform);
-
-        //if (OVRInput.GetDown(OVRInput.Button.One))
-        //{
-        //    //StartCoroutine(MarchingCubesRoutine());
-        //}
+            //if (OVRInput.GetDown(OVRInput.Button.One))
+            //{
+            //    //StartCoroutine(MarchingCubesRoutine());
+            //}
 
 
-        // Test in PC
+            // Test in PC
 
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    onModeA();
-        //}
+            //if (Input.GetKeyDown(KeyCode.A))
+            //{
+            //    onModeA();
+            //}
 
-        //if (Input.GetKeyDown(KeyCode.B))
-        //{
-        //    onModeB();
-        //}
+            //if (Input.GetKeyDown(KeyCode.B))
+            //{
+            //    onModeB();
+            //}
 
-        //if (Input.GetKeyDown(KeyCode.N))
-        //{
-        //    ChangeScene();
-        //}
-    }
+            //if (Input.GetKeyDown(KeyCode.N))
+            //{
+            //    ChangeScene();
+            //}
+        }
 
     //Setup the Scene
     void setupCurrentScene()
@@ -257,10 +260,15 @@ public class MarchingCubesCustom : MonoBehaviour
             if (tempCharges[i] < 0)
             {
                 particlesOnScene[i].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
+                particleSignText[i].GetComponent<TextMeshPro>().text = "-";
             } else
             {
                 particlesOnScene[i].GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+                particleSignText[i].GetComponent<TextMeshPro>().text = "+";
             }
+
+            particlesOnScene[i].transform.LookAt(MainCamera);
+
         }
 
         particles = tempParticles;
@@ -856,6 +864,7 @@ public class MarchingCubesCustom : MonoBehaviour
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].SetActive(true);
+            particles[i].transform.LookAt(MainCamera);
         }
 
         //Mode A conditions
@@ -875,6 +884,7 @@ public class MarchingCubesCustom : MonoBehaviour
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].SetActive(true);
+            particles[i].transform.LookAt(MainCamera);
         }
 
         //Mode B conditions
@@ -993,13 +1003,13 @@ public class MarchingCubesCustom : MonoBehaviour
             if (pointsCharges[i] > maxCharge)
             {
                 maxCharge = pointsCharges[i];
-                Debug.Log("Max Value in -> " + new Vector3(points[i].x, points[i].y, points[i].z));
+                //Debug.Log("Max Value in -> " + new Vector3(points[i].x, points[i].y, points[i].z));
             }
 
             if (pointsCharges[i] < minCharge && pointsCharges[i] > 1e-5f && pointsCharges[i] > -Mathf.Infinity)
             {
                 minCharge = pointsCharges[i];
-                Debug.Log("Min Value in -> " + new Vector3(points[i].x, points[i].y, points[i].z));
+                //Debug.Log("Min Value in -> " + new Vector3(points[i].x, points[i].y, points[i].z));
             }
         }
 
