@@ -22,6 +22,7 @@ public class MarchingCubesCustom : MonoBehaviour
     public UnityEngine.UI.Text partLabel;
     public GameObject MenuCanvas;
     public GameObject SceneControl;
+    public GameObject[] interestPoints;
 
 
     //For debugging 
@@ -867,6 +868,11 @@ public class MarchingCubesCustom : MonoBehaviour
             particles[i].transform.LookAt(MainCamera);
         }
 
+        if (interestPoints.Length > currentScene)
+        {
+            interestPoints[currentScene].SetActive(true);
+        }
+
         //Mode A conditions
         hapticFeedback = false;
         simpleMode = false;
@@ -885,6 +891,11 @@ public class MarchingCubesCustom : MonoBehaviour
         {
             particles[i].SetActive(true);
             particles[i].transform.LookAt(MainCamera);
+        }
+
+        if (interestPoints.Length > currentScene)
+        {
+            interestPoints[currentScene].SetActive(true);
         }
 
         //Mode B conditions
@@ -922,6 +933,11 @@ public class MarchingCubesCustom : MonoBehaviour
             {
                 particles[i].SetActive(true);
                 particles[i].transform.position = initialPositions[i];
+            }
+
+            if (interestPoints.Length > currentScene)
+            {
+                interestPoints[currentScene].SetActive(true);
             }
 
             lineController.CleanLines();
