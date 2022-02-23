@@ -105,13 +105,13 @@ public class MarchingCubesCustom : MonoBehaviour
     bool updateSurface = false;
 
     // Menu options
-    public bool showLines = true;
-    public bool Mode2D = true;
-    public bool hapticFeedback = true;
-    public bool showSurface = true;
-    public bool simpleMode = true;
-    public bool showMenu = true;
-    public bool particleInteraction = true;
+    public bool showLines;
+    public bool Mode2D;
+    public bool hapticFeedback;
+    public bool showSurface;
+    public bool simpleMode;
+    public bool showMenu;
+    public bool particleInteraction;
 
 
 
@@ -213,24 +213,6 @@ public class MarchingCubesCustom : MonoBehaviour
             //if (OVRInput.GetDown(OVRInput.Button.One))
             //{
             //    //StartCoroutine(MarchingCubesRoutine());
-            //}
-
-
-            // Test in PC
-
-            //if (Input.GetKeyDown(KeyCode.A))
-            //{
-            //    onModeA();
-            //}
-
-            //if (Input.GetKeyDown(KeyCode.B))
-            //{
-            //    onModeB();
-            //}
-
-            //if (Input.GetKeyDown(KeyCode.N))
-            //{
-            //    ChangeScene();
             //}
         }
 
@@ -911,11 +893,45 @@ public class MarchingCubesCustom : MonoBehaviour
         showSurface = true;
     }
 
-    public void ChangeScene()
+    public void nextScene()
     {
-        currentScene++;
+        ChangeScene(1);
+    }
 
-        if(currentScene < numberOfParticles.Length)
+    public void backScene()
+    {
+        ChangeScene(-1);
+    }
+
+    public void returnToHome()
+    {
+        currentScene = 0;
+
+        for (int i = 0; i < charges.Length; ++i)
+        {
+            particles[i].SetActive(false);
+        }
+
+        ChangeScene(0);
+
+        showLines = false;
+        Mode2D = true;
+        hapticFeedback = false;
+        simpleMode = true;
+        showMenu = false;
+        particleInteraction = false;
+        showSurfaceState(false);
+        lineController.CleanLines();
+
+        MenuCanvas.SetActive(true);
+        SceneControl.SetActive(false);
+    }
+
+    public void ChangeScene(int direction)
+    {
+        currentScene += direction;
+
+        if(currentScene >= 0 && currentScene < numberOfParticles.Length)
         {
             for (int i = 0; i < charges.Length; ++i)
             {

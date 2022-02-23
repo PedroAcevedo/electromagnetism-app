@@ -11,12 +11,18 @@ public class InterestPoint : MonoBehaviour
     {
         Debug.Log("Interest point touched");
 
-        Destroy(this.gameObject, TimeActive);
+        StartCoroutine(TemporarilyDeactivate(TimeActive));
 
-        if(nextPoint != null)
+        if (nextPoint != null)
         {
             nextPoint.SetActive(true);
         }
+    }
+
+    private IEnumerator TemporarilyDeactivate(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        this.gameObject.SetActive(false);
     }
 
 }
