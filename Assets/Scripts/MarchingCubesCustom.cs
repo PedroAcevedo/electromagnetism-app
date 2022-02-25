@@ -140,6 +140,8 @@ public class MarchingCubesCustom : MonoBehaviour
             charges[i] = charges[i]*1e-9f;
         }
 
+        //Verify Hands
+        verifyHand();
 
         // Select the scene
         particlesOnScene = (UnityEngine.GameObject[]) particles.Clone();
@@ -210,11 +212,26 @@ public class MarchingCubesCustom : MonoBehaviour
             findHandsVibrationOptimized();
         }
 
-            //if (OVRInput.GetDown(OVRInput.Button.One))
-            //{
-            //    //StartCoroutine(MarchingCubesRoutine());
-            //}
+        if (OVRInput.GetDown(OVRInput.Button.Four))
+        {
+            returnToHome();
+            //StartCoroutine(MarchingCubesRoutine());
         }
+
+
+    }
+
+    //Hand raycasting
+    void verifyHand()
+    {
+        Debug.Log("Left Hander"  + PlayerPrefs.GetInt("LeftHander"));
+
+        if (PlayerPrefs.GetInt("LeftHander") == 1)
+        {
+            RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = false;
+            LHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = true;
+        }
+    }
 
     //Setup the Scene
     void setupCurrentScene()
@@ -913,6 +930,8 @@ public class MarchingCubesCustom : MonoBehaviour
         }
 
         ChangeScene(0);
+
+        GameObject.Find("XR Rig").transform.position = new Vector3(0.0f, -15f, -15f);
 
         showLines = false;
         Mode2D = true;
