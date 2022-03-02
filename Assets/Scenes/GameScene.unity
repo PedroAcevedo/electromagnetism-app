@@ -4889,9 +4889,9 @@ MonoBehaviour:
   - {fileID: 544536320}
   - {fileID: 1787445026}
   charges:
-  - 5
-  - 5
-  - 5
+  - 1
+  - 1
+  - 1
   RHand: {fileID: 577714554}
   LHand: {fileID: 1759790359}
   partLabel: {fileID: 716806814}
@@ -6040,7 +6040,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_System: {fileID: 1353119053}
-  m_MoveSpeed: 2
+  m_MoveSpeed: 5
   m_EnableStrafe: 1
   m_UseGravity: 1
   m_GravityApplicationMode: 0
@@ -7205,7 +7205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LineWidth: 0.02
-  m_OverrideInteractorLineLength: 1
+  m_OverrideInteractorLineLength: 0
   m_LineLength: 10
   m_WidthCurve:
     serializedVersion: 2

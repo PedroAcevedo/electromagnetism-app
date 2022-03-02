@@ -10,18 +10,13 @@ public class CircleVibration : MonoBehaviour
     public float intensity;
 
     public void OnTriggerEnter(Collider other)
-    {
-
-        Vector3 RPos = RHand.transform.position;
-        Vector3 LPos = LHand.transform.position;
-
-        float distR = Vector3.Distance(RPos, this.transform.position);
-        float distL = Vector3.Distance(LPos, this.transform.position);
-
-        if (distR < distL)
+    { 
+        if (other.gameObject.name == "RightHandAnchor")
         {
             OVRInput.SetControllerVibration(1, intensity, OVRInput.Controller.RTouch);
-        } else
+        }
+
+        if(other.gameObject.name == "LeftHandAnchor")
         {
             OVRInput.SetControllerVibration(1, intensity, OVRInput.Controller.LTouch);
         }

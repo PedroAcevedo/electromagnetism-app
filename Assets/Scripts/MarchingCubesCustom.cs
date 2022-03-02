@@ -47,6 +47,7 @@ public class MarchingCubesCustom : MonoBehaviour
     private float minDistance = 10000.0f;
     Vector4[] points;                  // Vertex on the grid
     float[] pointsCharges;             // Electric field applied of each point of the grid 
+    float[] pointsAngles;             // Electric field applied of each point of the grid 
 
     private float prom = 0;
     private float promLog = 0;
@@ -100,6 +101,7 @@ public class MarchingCubesCustom : MonoBehaviour
     int currentScene = 0;
     private Transform MainCamera;
     private GameObject[] particleSignText;
+    private GameObject arrowInField;
 
     //Update actual view
     bool updateSurface = false;
@@ -144,6 +146,7 @@ public class MarchingCubesCustom : MonoBehaviour
         verifyHand();
 
         // Select the scene
+        arrowInField = Resources.Load("Prefabs/arrow_in_field") as GameObject;
         particlesOnScene = (UnityEngine.GameObject[]) particles.Clone();
         chargesOnScene =  (float[]) charges.Clone();
         MainCamera = GameObject.Find("Main Camera").transform;
@@ -349,21 +352,23 @@ public class MarchingCubesCustom : MonoBehaviour
         //        duplicateText.transform.position = new Vector3(points[i].x, points[i].y, points[i].z);
         //    }
         //}
+
         //int contSpheres = 0;
         //if (meshFilter && DEBUG_GRID)
         //{
-        //    for (int i = 0; i < points.Length - 1; ++i)
+        //for (int i = 0; i < points.Length - 1; ++i)
+        //{
+        //    if (points[i].z < 0.4 && points[i].z > 0 && pointsCharges[i] > 0) //pointsCharges[i] == 0 && points[i].x > particles[1].transform.position.x && particles[0].transform.position.x > points[i].x && 20 > contSpheres )
         //    {
-        //        if (points[i].z < 0.4 && points[i].z > 0 && pointsCharges[i] != 0) //pointsCharges[i] == 0 && points[i].x > particles[1].transform.position.x && particles[0].transform.position.x > points[i].x && 20 > contSpheres )
-        //        {
-        //            GameObject duplicate = Instantiate(reference);
-        //            duplicate.transform.position = new Vector3(points[i].x, points[i].y, points[i].z);
-        //            GameObject duplicateText = Instantiate(referenceText);
-        //            duplicateText.GetComponent<TextMeshPro>().text = pointsCharges[i] + "";
-        //            duplicateText.transform.position = new Vector3(points[i].x - 0.25f, points[i].y - 0.3f, points[i].z);
-        //            contSpheres++;
-        //        }
+        //        GameObject duplicate = Instantiate(arrowInField);
+        //        duplicate.transform.position = new Vector3(points[i].x, points[i].y, points[i].z);
+        //        duplicate.transform.Rotate(0.0f, 0.0f, pointsAngles[i]);
+        //        GameObject duplicateText = Instantiate(referenceText);
+        //        duplicateText.GetComponent<TextMeshPro>().text = pointsCharges[i] + "";
+        //        duplicateText.transform.position = new Vector3(points[i].x - 0.25f, points[i].y - 0.3f, points[i].z);
+        //        //contSpheres++;
         //    }
+        //}
         //}
         //    var savePath = "Assets/electric.asset";
         //    Debug.Log("Saved Mesh to:" + savePath);
@@ -463,12 +468,26 @@ public class MarchingCubesCustom : MonoBehaviour
     {
         float distance = new Vector3((b.x - a.x), (b.y - a.y), (b.z - a.z)).magnitude;
 
-        if (b == new Vector3(-1.25f, 0f, 0f))
+        return Math.Abs( (K * charge) / (float)Math.Pow(distance, 2.0));
+    }
+
+    float angle(Vector3 a)
+    {
+        Vector3 totalForce = new Vector3(0.0f, 0.0f, 0.0f);
+
+        for (int i = 0; i < n; i++)
         {
-            Debug.Log("Distance ->" + distance);
+            Vector3 electric_magnitude = electricField(particles[i].transform.position, a, charges[i]) * rHat(particles[i].transform.position, a);
+            totalForce = totalForce + directionOfTheField(a, particles[i].transform.position, charges[i]) * electric_magnitude; //(charges[i] / Math.Abs(charges[i])) * electric_magnitude; //Math.Abs(force(currentPosition, particles[i].transform.position, 1, charges[i]));
         }
 
-        return Math.Abs( (K * charge) / (float)Math.Pow(distance, 2.0));
+
+        float angle = Mathf.Atan(totalForce.y / totalForce.x) * Mathf.Rad2Deg;
+
+        if (totalForce.y < 0)
+            angle = 180-angle;
+
+        return angle;
     }
 
     float implicitFunction(Vector3 p)
@@ -651,13 +670,16 @@ public class MarchingCubesCustom : MonoBehaviour
             if(quadIndexR != -1)
             {
                 String[] indexQuadR = QuadrantsElements[quadIndexR].Split('-');
+
+                float lessDistance = 1000f;
+
                 for (int i = 0; i < indexQuadR.Length - 1; ++i)
                 {
-                    float rTemp = IsInMyCube(new Vector3(points[Int32.Parse(indexQuadR[i])].x, points[Int32.Parse(indexQuadR[i])].y, points[Int32.Parse(indexQuadR[i])].z), RPos, Int32.Parse(indexQuadR[i]));
-                    if (rTemp != -1)
+                    Vector3 pointPos = new Vector3(points[Int32.Parse(indexQuadR[i])].x, points[Int32.Parse(indexQuadR[i])].y, points[Int32.Parse(indexQuadR[i])].z);
+                    if (Vector3.Distance(pointPos, RPos) < lessDistance)
                     {
-                        RAmplitude = rTemp;
-                        break;
+                        RAmplitude = pointsCharges[Int32.Parse(indexQuadR[i])];
+                        lessDistance = Vector3.Distance(pointPos, RPos);
                     }
                 }
             }
@@ -665,15 +687,18 @@ public class MarchingCubesCustom : MonoBehaviour
             if (quadIndexL != -1)
             {
                 String[] indexQuadL = QuadrantsElements[quadIndexL].Split('-');
+                float lessDistance = 1000f;
 
                 for (int i = 0; i < indexQuadL.Length - 1; ++i)
                 {
-                    float lTemp = IsInMyCube(new Vector3(points[Int32.Parse(indexQuadL[i])].x, points[Int32.Parse(indexQuadL[i])].y, points[Int32.Parse(indexQuadL[i])].z), LPos, Int32.Parse(indexQuadL[i]));
-                    if (lTemp != -1)
+                    Vector3 pointPos = new Vector3(points[Int32.Parse(indexQuadL[i])].x, points[Int32.Parse(indexQuadL[i])].y, points[Int32.Parse(indexQuadL[i])].z);
+                    
+                    if (Vector3.Distance(pointPos, LPos) < lessDistance)
                     {
-                        LAmplitude = lTemp;
-                        break;
+                        LAmplitude = pointsCharges[Int32.Parse(indexQuadL[i])];
+                        lessDistance = Vector3.Distance(pointPos, LPos);
                     }
+
                 }
             }
 
@@ -682,7 +707,6 @@ public class MarchingCubesCustom : MonoBehaviour
         OVRInput.SetControllerVibration(1, RAmplitude, OVRInput.Controller.RTouch);
         OVRInput.SetControllerVibration(1, LAmplitude, OVRInput.Controller.LTouch);
     }
-
 
     public void findHandsVibrationOptimized2()
     {
@@ -1015,6 +1039,7 @@ public class MarchingCubesCustom : MonoBehaviour
     {
         points = new Vector4[(nX + 1) * (nY + 1) * (nZ + 1)];
         pointsCharges = new float[(nX + 1) * (nY + 1) * (nZ + 1)];
+        //pointsAngles = new float[(nX + 1) * (nY + 1) * (nZ + 1)];
         stepSize = new Vector3((float)(MAXX - MINX) / (float)nX, (float)(MAXX - MINY) / (float)nY, (float)(MAXZ - MINZ) / (float)nZ); 
 
         Debug.Log(stepSize);
@@ -1036,6 +1061,7 @@ public class MarchingCubesCustom : MonoBehaviour
 
                     points[ind] = vert;
                     pointsCharges[ind] = (float)Math.Log10(electromagnetismCharge(new Vector3(vert.x, vert.y, vert.z)));
+                    pointsCharges[ind] = (float)Math.Log10(electromagnetismCharge(new Vector3(vert.x, vert.y, vert.z)));
                     clasifyPoint(new Vector3(vert.x, vert.y, vert.z), ind);
 
                 }
@@ -1049,7 +1075,9 @@ public class MarchingCubesCustom : MonoBehaviour
         for (int i = 0; i < (nX + 1) * (nY + 1) * (nZ + 1); ++i)
         {
             points[i].w = electromagnetism3(new Vector3(points[i].x, points[i].y, points[i].z));/*(step 3)*/
-            pointsCharges[i] = (float)Math.Log10((float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z))));//(float)Math.Log10(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z)));
+            pointsCharges[i] = (float)Math.Log10((float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z))));
+            //pointsCharges[i] = (float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z)));//(float)Math.Log10((float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z))));//(float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z))); 
+            //pointsAngles[i] = angle(new Vector3(points[i].x, points[i].y, points[i].z));
 
             if (pointsCharges[i] > maxCharge)
             {
