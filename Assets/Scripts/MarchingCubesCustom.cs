@@ -7,6 +7,8 @@ using System;
 using UnityEngine.SceneManagement;
 using UnityEditor;
 using System.Linq;
+using UnityEngine.EventSystems;
+
 
 public class MarchingCubesCustom : MonoBehaviour
 {
@@ -23,6 +25,7 @@ public class MarchingCubesCustom : MonoBehaviour
     public GameObject MenuCanvas;
     public GameObject SceneControl;
     public GameObject[] interestPoints;
+    public GameObject EventSytem;
 
 
     //For debugging 
@@ -149,7 +152,7 @@ public class MarchingCubesCustom : MonoBehaviour
         arrowInField = Resources.Load("Prefabs/arrow_in_field") as GameObject;
         particlesOnScene = (UnityEngine.GameObject[]) particles.Clone();
         chargesOnScene =  (float[]) charges.Clone();
-        MainCamera = GameObject.Find("Main Camera").transform;
+        MainCamera = GameObject.Find("OVRCameraRig").transform;
         setupCurrentScene();
 
         nX = dimension;
@@ -231,8 +234,10 @@ public class MarchingCubesCustom : MonoBehaviour
 
         if (PlayerPrefs.GetInt("LeftHander") == 1)
         {
-            RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = false;
-            LHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = true;
+            FindObjectOfType<OVRInputModule>().rayTransform = LHand.transform;
+        } else
+        {
+            FindObjectOfType<OVRInputModule>().rayTransform = RHand.transform;
         }
     }
 
@@ -955,7 +960,7 @@ public class MarchingCubesCustom : MonoBehaviour
 
         ChangeScene(0);
 
-        GameObject.Find("XR Rig").transform.position = new Vector3(0.0f, -15f, -15f);
+        GameObject.Find("OVRPlayerController").transform.position = new Vector3(0.0f, -15f, -15f);
 
         showLines = false;
         Mode2D = true;
