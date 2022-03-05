@@ -8,12 +8,13 @@ public class InterestPoint : MonoBehaviour
     public GameObject nextPoint;
 
     private Color touchedColor = Color.black;
+    private Color originColor = new Color(0.0f, 0.0f, 0.0f);
 
     public void OnTriggerEnter(Collider other)
     {
         Debug.Log("Interest point touched");
 
-        StartCoroutine(TemporarilyDeactivate(TimeActive));
+        this.gameObject.GetComponent<Renderer>().material.color = touchedColor;
 
         if (nextPoint != null)
         {
@@ -21,11 +22,9 @@ public class InterestPoint : MonoBehaviour
         }
     }
 
-    private IEnumerator TemporarilyDeactivate(float duration)
+    public void Reset()
     {
-        this.gameObject.GetComponent<Renderer>().material.color = touchedColor;
-        yield return new WaitForSeconds(duration);
-        this.gameObject.SetActive(false);
+        this.gameObject.GetComponent<Renderer>().material.color = originColor;
     }
 
 }

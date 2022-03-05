@@ -25,8 +25,6 @@ public class MarchingCubesCustom : MonoBehaviour
     public GameObject MenuCanvas;
     public GameObject SceneControl;
     public GameObject[] interestPoints;
-    public GameObject EventSytem;
-
 
     //For debugging 
     public bool DEBUG_GRID = false;
@@ -117,8 +115,6 @@ public class MarchingCubesCustom : MonoBehaviour
     public bool simpleMode;
     public bool showMenu;
     public bool particleInteraction;
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -224,7 +220,6 @@ public class MarchingCubesCustom : MonoBehaviour
             //StartCoroutine(MarchingCubesRoutine());
         }
 
-
     }
 
     //Hand raycasting
@@ -283,6 +278,27 @@ public class MarchingCubesCustom : MonoBehaviour
         charges = tempCharges;
         n = particles.Length;
         partLabel.GetComponent<UnityEngine.UI.Text>().text = "Part " + (currentScene + 1);
+    }
+
+    //Reset interest point
+    void resetInterestPoint()
+    {
+        if (interestPoints.Length > currentScene)
+        {
+            interestPoints[currentScene].SetActive(false);
+
+            GameObject points = interestPoints[currentScene].transform.GetChild(0).gameObject;
+
+            points.SetActive(true);
+            points.GetComponent<InterestPoint>().Reset();
+
+            for (int i = 1; i < interestPoints[currentScene].transform.childCount; i++)
+            {
+                points = interestPoints[currentScene].transform.GetChild(i).gameObject;
+                points.SetActive(false);
+                points.GetComponent<InterestPoint>().Reset();
+            }
+        }
     }
 
     // Update is called once per frame
@@ -899,6 +915,8 @@ public class MarchingCubesCustom : MonoBehaviour
         if (interestPoints.Length > currentScene)
         {
             interestPoints[currentScene].SetActive(true);
+            interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
+
         }
 
         //Mode A conditions
@@ -913,7 +931,6 @@ public class MarchingCubesCustom : MonoBehaviour
         particleInteraction = true;
         MenuCanvas.SetActive(false);
         SceneControl.SetActive(true);
-        //RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
 
         for (int i = 0; i < charges.Length; ++i)
         {
@@ -924,6 +941,8 @@ public class MarchingCubesCustom : MonoBehaviour
         if (interestPoints.Length > currentScene)
         {
             interestPoints[currentScene].SetActive(true);
+            interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
+
         }
 
         //Mode B conditions
@@ -977,6 +996,8 @@ public class MarchingCubesCustom : MonoBehaviour
 
     public void ChangeScene(int direction)
     {
+        resetInterestPoint();
+
         currentScene += direction;
 
         if(currentScene >= 0 && currentScene < numberOfParticles.Length)
@@ -1002,6 +1023,8 @@ public class MarchingCubesCustom : MonoBehaviour
             if (interestPoints.Length > currentScene)
             {
                 interestPoints[currentScene].SetActive(true);
+                interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
+
             }
 
             lineController.CleanLines();
