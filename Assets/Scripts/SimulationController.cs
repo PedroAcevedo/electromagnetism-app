@@ -115,7 +115,7 @@ public class SimulationController : MonoBehaviour
     private Transform MainCamera;
     private GameObject[] particleSignText;
     private GameObject arrowInField;
-    private int simulationMode;
+    private int simulationMode = -1;
 
     //Update actual view
     private bool updateSurface = false;
@@ -183,37 +183,36 @@ public class SimulationController : MonoBehaviour
             runMarchingCubes();
             updateSurface = false;
         }
-
-        if (showLines)
+        
+        for (int i = 0; i < particles.Length; ++i)
         {
-
-            for (int i = 0; i < particles.Length; ++i)
+            if (particles[i].transform.hasChanged)
             {
-                if (particles[i].transform.hasChanged)
+                particles[i].transform.hasChanged = false;
+                
+                if (showLines)
                 {
-                    particles[i].transform.hasChanged = false;
                     lineController.Draw(this.Mode2D);
-                    if (showSurface)
-                    {
-                        if (particles[i].GetComponent<OVRGrabbable>().isGrabbed)
-                            showSurfaceState(false);
-                    }
-                    break;
                 }
+                if (showSurface)
+                {
+                    if (particles[i].GetComponent<OVRGrabbable>().isGrabbed)
+                        showSurfaceState(false);
+                }
+                break;
             }
+        }
+        
+        bool isStatic = true;
+        
+        for (int i = 0; i < particles.Length; ++i)
+        {
+            isStatic = isStatic && !particles[i].GetComponent<OVRGrabbable>().isGrabbed;
+        }
 
-            bool isStatic = true;
-
-            for (int i = 0; i < particles.Length; ++i)
-            {
-                isStatic = isStatic && !particles[i].GetComponent<OVRGrabbable>().isGrabbed;
-            }
-
-
-            if (!showSurface && isStatic)
-            {
-                updateIsosurface();
-            }
+        if (!showSurface && isStatic && simulationMode != -1)
+        {
+            updateIsosurface();
         }
     }
 
@@ -684,6 +683,7 @@ public class SimulationController : MonoBehaviour
 
         ChangeScene(0);
 
+        simulationMode = -1;
         resetPlayerPosition();
 
         showLines = false;
@@ -746,9 +746,9 @@ public class SimulationController : MonoBehaviour
 
     }
 
-    public int getCurrentMode()
+    public bool getCurrentMode()
     {
-        return simulationMode;
+        return simulationMode == 0 || simulationMode == 2;
     }
 
     public void selectMode(int modeSelected)
@@ -757,20 +757,28 @@ public class SimulationController : MonoBehaviour
 
         switch (simulationMode)
         {
-            case 0:
-                //Mode A conditions
+            case 0: // Condition 1: No force label
+                showLines = true;
                 hapticFeedback = false;
                 simpleMode = false;
-
                 break;
-            case 1:
-                //Mode B conditions
+            case 1: // Condition 1: force label
+                showLines = false;
+                hapticFeedback = true;
+                simpleMode = true;
+                break;
+            case 2: // Condition 1: force label
+                showLines = true;
+                hapticFeedback = true;
+                simpleMode = true;
+                break;
+            case 3: // Condition 1: No force label only firts step
+                showLines = false;
                 hapticFeedback = true;
                 simpleMode = true;
                 break;
         }
 
-        showLines = true;
         particleInteraction = true;
         MenuCanvas.SetActive(false);
         SceneControl.SetActive(true);
@@ -791,14 +799,24 @@ public class SimulationController : MonoBehaviour
 
     }
 
-    public void onModeA()
+    public void selectCond1()
     {
         selectMode(0);
     }
 
-    public void onModeB()
+    public void selectCond2()
     {
         selectMode(1);
+    }
+
+    public void selectCond3()
+    {
+        selectMode(2);
+    }
+
+    public void selectCond4()
+    {
+        selectMode(3);
     }
 
     #endregion

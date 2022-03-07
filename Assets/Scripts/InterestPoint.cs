@@ -29,7 +29,7 @@ public class InterestPoint : MonoBehaviour
 
     public bool showLabel()
     {
-        return MarchingRef.GetComponent<SimulationController>().getCurrentMode() == 0;
+        return MarchingRef.GetComponent<SimulationController>().getCurrentMode();
     }
 
     public void Reset()
