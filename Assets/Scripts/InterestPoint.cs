@@ -31,7 +31,7 @@ public class InterestPoint : MonoBehaviour
 
     public bool showLabel()
     {
-        return MarchingRef.GetComponent<MarchingCubesCustom>().getCurrentMode() == 0;
+        return MarchingRef.GetComponent<SimulationController>().getCurrentMode() == 0;
     }
 
     public void Reset()
@@ -43,7 +43,7 @@ public class InterestPoint : MonoBehaviour
     public void changeValue()
     {
         this.gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>().text 
-            = MarchingRef.GetComponent<MarchingCubesCustom>().getPointValue(this.gameObject.transform.position) + " N";
+            = MarchingRef.GetComponent<SimulationController>().getPointValue(this.gameObject.transform.position) + " N";
     }
 
 }

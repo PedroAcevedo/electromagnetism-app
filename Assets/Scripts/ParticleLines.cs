@@ -30,13 +30,9 @@ public class ParticleLines
     private float minimumInteractionDistance = 10.0f;
     private List<GameObject> lines = new List<GameObject>();
     private List<GameObject> arrows = new List<GameObject>();
-    private SHOIntegrator theIntegrator;
-    private double t = 0.0;
-    private double h = 0.01;
     private int FIELD_LINES = 6;
     private float eps;
     private float EPSILON;
-    private float e = 1.60217733E-19f;
     private int linesLimit = 10;
 
     public ParticleLines(GameObject[] particles, float[] charges)
