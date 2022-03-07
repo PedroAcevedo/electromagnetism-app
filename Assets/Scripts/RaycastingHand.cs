@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class RaycastingHand : MonoBehaviour
 {
     public bool LeftHander = false;
+    public GameObject loadingScreen;
 
     public void GoToSimulation()
     {
@@ -17,6 +18,11 @@ public class RaycastingHand : MonoBehaviour
         }
 
         PlayerPrefs.SetInt("LeftHander", left);
-        SceneManager.LoadScene("GameScene");
+
+        loadingScreen.SetActive(true);
+
+        SceneManager.LoadSceneAsync("GameScene");
+
+        Debug.Log("Its open, lets wait");
     }
 }

@@ -103,6 +103,7 @@ public class MarchingCubesCustom : MonoBehaviour
     private Transform MainCamera;
     private GameObject[] particleSignText;
     private GameObject arrowInField;
+    private int simulationMode;
 
     //Update actual view
     bool updateSurface = false;
@@ -590,6 +591,31 @@ public class MarchingCubesCustom : MonoBehaviour
         return p;
     }
 
+    public string getPointValue(Vector3 point)
+    {
+        int quadIndexR = findQuadrant(point);
+
+        float currentValue = 0;
+
+        String[] indexQuad = QuadrantsElements[quadIndexR].Split('-');
+
+        float lessDistance = 1000f;
+
+        for (int i = 0; i < indexQuad.Length - 1; ++i)
+        {
+            Vector3 pointPos = new Vector3(points[Int32.Parse(indexQuad[i])].x, points[Int32.Parse(indexQuad[i])].y, points[Int32.Parse(indexQuad[i])].z);
+            if (Vector3.Distance(pointPos, point) < lessDistance)
+            {
+                currentValue = pointsCharges[Int32.Parse(indexQuad[i])];
+                lessDistance = Vector3.Distance(pointPos, point);
+            }
+        }
+
+        currentValue = Mathf.Pow(10, currentValue);
+
+        return currentValue.ToString("F2");
+    }
+
     public void findHandsVibration()
     {
         float RAmplitude = 0;
@@ -905,6 +931,8 @@ public class MarchingCubesCustom : MonoBehaviour
         SceneControl.SetActive(true);
         //RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
 
+        //Mode A selected
+        simulationMode = 0;
 
         for (int i = 0; i < charges.Length; ++i)
         {
@@ -931,6 +959,10 @@ public class MarchingCubesCustom : MonoBehaviour
         particleInteraction = true;
         MenuCanvas.SetActive(false);
         SceneControl.SetActive(true);
+
+        //Mode B selected
+        simulationMode = 1;
+
 
         for (int i = 0; i < charges.Length; ++i)
         {
@@ -1037,6 +1069,11 @@ public class MarchingCubesCustom : MonoBehaviour
             updateIsosurface();
         }
         
+    }
+
+    public int getCurrentMode()
+    {
+        return simulationMode;
     }
 
     public float IsInMyCube(Vector3 gridPosition, Vector3 location, int index)

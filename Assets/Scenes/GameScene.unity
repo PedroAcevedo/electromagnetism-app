@@ -287,6 +287,10 @@ PrefabInstance:
       propertyPath: nextPoint
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8676254015544621729, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
+      propertyPath: MarchingRef
+      value: 
+      objectReference: {fileID: 1062918402}
     - target: {fileID: 8880151282098162993, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
       propertyPath: m_text
       value: 3
@@ -3278,6 +3282,10 @@ PrefabInstance:
       propertyPath: nextPoint
       value: 
       objectReference: {fileID: 2139512341}
+    - target: {fileID: 8676254015544621729, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
+      propertyPath: MarchingRef
+      value: 
+      objectReference: {fileID: 1062918402}
     - target: {fileID: 8880151282098162993, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
       propertyPath: m_text
       value: 'B
@@ -5464,6 +5472,10 @@ PrefabInstance:
       propertyPath: nextPoint
       value: 
       objectReference: {fileID: 1098987347}
+    - target: {fileID: 8676254015544621729, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
+      propertyPath: MarchingRef
+      value: 
+      objectReference: {fileID: 1062918402}
     - target: {fileID: 8880151282098162993, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
       propertyPath: m_text
       value: 1
@@ -7547,6 +7559,10 @@ PrefabInstance:
       propertyPath: nextPoint
       value: 
       objectReference: {fileID: 913743630}
+    - target: {fileID: 8676254015544621729, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
+      propertyPath: MarchingRef
+      value: 
+      objectReference: {fileID: 1062918402}
     - target: {fileID: 8880151282098162993, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
       propertyPath: m_text
       value: 2
@@ -7832,6 +7848,10 @@ PrefabInstance:
       propertyPath: nextPoint
       value: 
       objectReference: {fileID: 827132416}
+    - target: {fileID: 8676254015544621729, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
+      propertyPath: MarchingRef
+      value: 
+      objectReference: {fileID: 1062918402}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
 --- !u!1 &2000460966
@@ -8340,6 +8360,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8676254015544621729, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
+      propertyPath: MarchingRef
+      value: 
+      objectReference: {fileID: 1062918402}
     - target: {fileID: 8880151282098162993, guid: f5aacc82bf3fbf444b2f472e5be3f437, type: 3}
       propertyPath: m_text
       value: C
