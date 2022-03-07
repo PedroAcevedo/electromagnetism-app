@@ -14,8 +14,6 @@ public class InterestPoint : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Interest point touched");
-
         this.gameObject.GetComponent<Renderer>().material.color = touchedColor;
 
         if (this.showLabel())

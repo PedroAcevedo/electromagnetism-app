@@ -120,6 +120,8 @@ public class SimulationController : MonoBehaviour
     //Update actual view
     private bool updateSurface = false;
 
+    private GameObject player;
+
     #endregion
 
     #region MonoBehaviour Callbacks
@@ -157,6 +159,7 @@ public class SimulationController : MonoBehaviour
         particlesOnScene = (UnityEngine.GameObject[])particles.Clone();
         chargesOnScene = (float[])charges.Clone();
         MainCamera = GameObject.Find("OVRCameraRig").transform;
+        player = GameObject.Find("OVRPlayerController");
         setupCurrentScene();
 
         nX = dimension;
@@ -681,7 +684,7 @@ public class SimulationController : MonoBehaviour
 
         ChangeScene(0);
 
-        GameObject.Find("OVRPlayerController").transform.position = new Vector3(0.0f, -15f, -15f);
+        resetPlayerPosition();
 
         showLines = false;
         Mode2D = true;
@@ -708,6 +711,8 @@ public class SimulationController : MonoBehaviour
             {
                 particles[i].SetActive(false);
             }
+
+            resetPlayerPosition();
 
             maxCharge = -1.0f;
             minCharge = 10000.0f;
@@ -746,16 +751,29 @@ public class SimulationController : MonoBehaviour
         return simulationMode;
     }
 
-    public void onModeA()
+    public void selectMode(int modeSelected)
     {
+        simulationMode = modeSelected;
+
+        switch (simulationMode)
+        {
+            case 0:
+                //Mode A conditions
+                hapticFeedback = false;
+                simpleMode = false;
+
+                break;
+            case 1:
+                //Mode B conditions
+                hapticFeedback = true;
+                simpleMode = true;
+                break;
+        }
+
         showLines = true;
         particleInteraction = true;
         MenuCanvas.SetActive(false);
         SceneControl.SetActive(true);
-        //RHand.GetComponent<UnityEngine.XR.Interaction.Toolkit.XRInteractorLineVisual>().enabled = showMenu;
-
-        //Mode A selected
-        simulationMode = 0;
 
         for (int i = 0; i < charges.Length; ++i)
         {
@@ -767,44 +785,20 @@ public class SimulationController : MonoBehaviour
         {
             interestPoints[currentScene].SetActive(true);
             interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
-
         }
 
-        //Mode A conditions
-        hapticFeedback = false;
-        simpleMode = false;
         showSurfaceState(true);
+
+    }
+
+    public void onModeA()
+    {
+        selectMode(0);
     }
 
     public void onModeB()
     {
-        showLines = true;
-        particleInteraction = true;
-        MenuCanvas.SetActive(false);
-        SceneControl.SetActive(true);
-
-        //Mode B selected
-        simulationMode = 1;
-
-
-        for (int i = 0; i < charges.Length; ++i)
-        {
-            particles[i].SetActive(true);
-            particles[i].transform.LookAt(MainCamera);
-        }
-
-        if (interestPoints.Length > currentScene)
-        {
-            interestPoints[currentScene].SetActive(true);
-            interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
-
-        }
-
-        //Mode B conditions
-        hapticFeedback = true;
-        simpleMode = true;
-        //Mode2D = false;
-        showSurfaceState(true);
+        selectMode(1);
     }
 
     #endregion
@@ -925,6 +919,18 @@ public class SimulationController : MonoBehaviour
 
     #endregion
 
+    #region Private Methods
+
+    void resetPlayerPosition()
+    {
+        var OVRplayer = player.GetComponent<OVRPlayerController>();
+        OVRplayer.enabled = false;
+        player.transform.position = new Vector3(0.0f, -1.5f, -15f);
+        player.transform.rotation = Quaternion.identity;
+        OVRplayer.enabled = true;
+    }
+
+    #endregion
 }
 
 public struct TRIANGLE
