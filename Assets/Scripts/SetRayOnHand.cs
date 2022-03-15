@@ -24,8 +24,9 @@ public class SetRayOnHand : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        m_InputModule.enabled = true;
         SetActiveController(Hand.transform);
-        HandSelector.GetComponent<RaycastingHand>().LeftHander = isLeft;
+        HandSelector.GetComponent<SceneController>().LeftHander = isLeft;
     }
 
 

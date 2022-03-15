@@ -1035,6 +1035,102 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 578819076}
   m_CullTransparentMesh: 1
+--- !u!1 &606028082
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 606028086}
+  - component: {fileID: 606028085}
+  - component: {fileID: 606028084}
+  - component: {fileID: 606028083}
+  m_Layer: 0
+  m_Name: RotationCube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &606028083
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606028082}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &606028084
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606028082}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &606028085
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606028082}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &606028086
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606028082}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -25.97, y: 3.5685515, z: -8.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1462,7 +1558,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114043904411177872, guid: a9d2de84afb308a4796cc671d3432b4d, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114043904411177872, guid: a9d2de84afb308a4796cc671d3432b4d, type: 3}
       propertyPath: rayTransform
@@ -1664,7 +1760,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Put your hand on the circle if you are... '
+  m_Text: Put your hand on the circle if you are...
 --- !u!222 &790514485
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1915,7 +2011,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: With the buttons of the controller try to grap the particles
+  m_Text: Try to grab the particles using the controller and its buttons.
 --- !u!222 &869235561
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2571,7 +2667,7 @@ GameObject:
   - component: {fileID: 1177701793}
   - component: {fileID: 1177701792}
   m_Layer: 0
-  m_Name: OnLaserHand
+  m_Name: SceneController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2591,6 +2687,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftHander: 0
   loadingScreen: {fileID: 1571724727}
+  player: {fileID: 1948418971}
 --- !u!4 &1177701793
 Transform:
   m_ObjectHideFlags: 0
@@ -3004,7 +3101,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Left Hander
+  m_Text: Left Handed
 --- !u!222 &1372677217
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3237,7 +3334,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Move around with the left controller joistick '
+  m_Text: Move around with the left controller joystick.
 --- !u!222 &1428964330
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3413,7 +3510,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The simulation takes a minute to load, so you should  wait patiently.
+  m_Text: The simulation is loading in a minute. Please wait on this scene.
 --- !u!222 &1475647451
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4035,7 +4132,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Put one hand in the circle, to fell the vibration
+  m_Text: 'Put your hand in the circle to fill the vibration.
+
+'
 --- !u!222 &1619380470
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4601,6 +4700,11 @@ RectTransform:
   m_AnchoredPosition: {x: 1032, y: 0}
   m_SizeDelta: {x: 1000, y: 623}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1948418971 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100008, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
+  m_PrefabInstance: {fileID: 947390574}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1966604442
 GameObject:
   m_ObjectHideFlags: 0
@@ -4671,7 +4775,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Right Hander
+  m_Text: Right Handed
 --- !u!222 &1966604445
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4750,7 +4854,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Electromagnestim VR App
+  m_Text: Electromagnetism VR App
 --- !u!222 &1966930881
 CanvasRenderer:
   m_ObjectHideFlags: 0

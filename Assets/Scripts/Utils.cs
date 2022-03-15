@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class Utils
 {
-
     // Charges helpers
-
     public static Vector3 rHat(Vector3 a, Vector3 b)
     {
         return Vector3.Normalize(new Vector3((b.x - a.x), (b.y - a.y), (b.z - a.z)));

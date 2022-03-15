@@ -22,10 +22,12 @@ public class SimulationController : MonoBehaviour
     public float[] charges;
     public GameObject RHand;            // VR right controller
     public GameObject LHand;            // VR left controller
+    public UnityEngine.UI.Text playerIDLabel;
     public UnityEngine.UI.Text partLabel;
     public GameObject MenuCanvas;
     public GameObject SceneControl;
     public GameObject[] interestPoints;
+    public int HMDNumber;
 
     //For debugging 
     public bool DEBUG_GRID = false;
@@ -106,8 +108,8 @@ public class SimulationController : MonoBehaviour
     private ParticleLines lineController;
 
     // For Scene control
-    private int[] numberOfParticles = { 2, 2, 2, 3, 3 };
-    private int[] negativeCharges = { 0, 2, 1, 2, 1 };
+    private int[] numberOfParticles = { 2, 2, 2, 3 };
+    private int[] negativeCharges = { 0, 2, 1, 2 };
     private Vector3[] initialPositions = { new Vector3(0.0f, 3.0f, 0.0f), new Vector3(-3.0f, 0.0f, 0.0f), new Vector3(3.0f, 0.0f, 0.0f) };
     private GameObject[] particlesOnScene;
     private float[] chargesOnScene;
@@ -119,8 +121,10 @@ public class SimulationController : MonoBehaviour
 
     //Update actual view
     private bool updateSurface = false;
-
+    
+    //User stats
     private GameObject player;
+    private string playerID;
 
     #endregion
 
@@ -154,6 +158,9 @@ public class SimulationController : MonoBehaviour
         //Verify Hands
         verifyHand();
 
+        //User ID
+        getUserID();
+
         // Select the scene
         arrowInField = Resources.Load("Prefabs/arrow_in_field") as GameObject;
         particlesOnScene = (UnityEngine.GameObject[])particles.Clone();
@@ -183,13 +190,13 @@ public class SimulationController : MonoBehaviour
             runMarchingCubes();
             updateSurface = false;
         }
-        
+
         for (int i = 0; i < particles.Length; ++i)
         {
             if (particles[i].transform.hasChanged)
             {
                 particles[i].transform.hasChanged = false;
-                
+
                 if (showLines)
                 {
                     lineController.Draw(this.Mode2D);
@@ -197,14 +204,17 @@ public class SimulationController : MonoBehaviour
                 if (showSurface)
                 {
                     if (particles[i].GetComponent<OVRGrabbable>().isGrabbed)
+                    {
                         showSurfaceState(false);
+                        cleanPointsLabels();
+                    }
                 }
                 break;
             }
         }
-        
+
         bool isStatic = true;
-        
+
         for (int i = 0; i < particles.Length; ++i)
         {
             isStatic = isStatic && !particles[i].GetComponent<OVRGrabbable>().isGrabbed;
@@ -946,6 +956,45 @@ public class SimulationController : MonoBehaviour
         player.transform.position = new Vector3(0.0f, -1.5f, -15f);
         player.transform.rotation = Quaternion.identity;
         OVRplayer.enabled = true;
+    }
+
+    void getUserID()
+    {
+        if (PlayerPrefs.GetInt("playerID") == 0)
+        {
+            PlayerPrefs.SetInt("playerID", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("playerID", PlayerPrefs.GetInt("playerID") + 1);
+        }
+
+
+        playerID = "HMD" + HMDNumber + "-" + PlayerPrefs.GetInt("playerID");
+
+        playerIDLabel.GetComponent<UnityEngine.UI.Text>().text = "Student ID: " + playerID;
+
+        //SceneData scene = new SceneData();
+
+        //SceneController.controller.SceneInfo(scene);
+
+        //SceneController.controller.SaveIntoJson(playerID);
+    }
+
+    void cleanPointsLabels()
+    {
+        if (interestPoints.Length > currentScene)
+        {
+            GameObject points = interestPoints[currentScene].transform.GetChild(0).gameObject;
+
+            points.GetComponent<InterestPoint>().Reset();
+
+            for (int i = 1; i < interestPoints[currentScene].transform.childCount; i++)
+            {
+                points = interestPoints[currentScene].transform.GetChild(i).gameObject;
+                points.GetComponent<InterestPoint>().Reset();
+            }
+        }
     }
 
     #endregion
