@@ -24,6 +24,7 @@ public class SimulationController : MonoBehaviour
     public GameObject LHand;            // VR left controller
     public UnityEngine.UI.Text playerIDLabel;
     public UnityEngine.UI.Text partLabel;
+    public UnityEngine.UI.Text phaseLabel;
     public GameObject MenuCanvas;
     public GameObject SceneControl;
     public GameObject[] interestPoints;
@@ -118,6 +119,7 @@ public class SimulationController : MonoBehaviour
     private GameObject[] particleSignText;
     private GameObject arrowInField;
     private int simulationMode = -1;
+    private int currentPhase = 0;
 
     //Update actual view
     private bool updateSurface = false;
@@ -125,6 +127,8 @@ public class SimulationController : MonoBehaviour
     //User stats
     private GameObject player;
     private string playerID;
+
+    private string[] PhaseNames = { "Exploration Phase", "Simulation Phase", "Final Phase" };
 
     #endregion
 
@@ -549,10 +553,20 @@ public class SimulationController : MonoBehaviour
 
     public void removeParticleInteraction(bool value)
     {
-        for (int i = 0; i < particles.Length; ++i)
+        for (int i = 0; i < particlesOnScene.Length; ++i)
         {
-            particles[i].GetComponent<OVRGrabbable>().enabled = !particles[i].GetComponent<OVRGrabbable>().enabled;
-            particles[i].GetComponent<SphereCollider>().enabled = !particles[i].GetComponent<SphereCollider>().enabled;
+            //particlesOnScene[i].GetComponent<OVRGrabbable>().enabled = !particlesOnScene[i].GetComponent<OVRGrabbable>().enabled;
+            //particlesOnScene[i].GetComponent<SphereCollider>().enabled = !particlesOnScene[i].GetComponent<SphereCollider>().enabled;
+            particlesOnScene[i].GetComponent<Rigidbody>().freezeRotation  = value;
+
+            if (value)
+            {
+                particlesOnScene[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            }
+            else
+            {
+                particlesOnScene[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            }
         }
     }
 
@@ -634,6 +648,7 @@ public class SimulationController : MonoBehaviour
         charges = tempCharges;
         n = particles.Length;
         partLabel.GetComponent<UnityEngine.UI.Text>().text = "Part " + (currentScene + 1);
+        phaseLabel.GetComponent<UnityEngine.UI.Text>().text = PhaseNames[currentPhase];
     }
 
     //Hand raycasting
@@ -737,13 +752,6 @@ public class SimulationController : MonoBehaviour
                 particles[i].transform.position = initialPositions[i];
             }
 
-            if (interestPoints.Length > currentScene)
-            {
-                interestPoints[currentScene].SetActive(true);
-                interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
-
-            }
-
             lineController.CleanLines();
             lineController = new ParticleLines(particles, charges);
             if (showLines)
@@ -752,6 +760,9 @@ public class SimulationController : MonoBehaviour
             }
 
             updateIsosurface();
+
+            moveToLobby();
+
         }
 
     }
@@ -799,12 +810,6 @@ public class SimulationController : MonoBehaviour
             particles[i].transform.LookAt(MainCamera);
         }
 
-        if (interestPoints.Length > currentScene)
-        {
-            interestPoints[currentScene].SetActive(true);
-            interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
-        }
-
         showSurfaceState(true);
 
     }
@@ -827,6 +832,46 @@ public class SimulationController : MonoBehaviour
     public void selectCond4()
     {
         selectMode(3);
+    }
+
+    public void returnToMain()
+    {
+        currentPhase = 0;
+        resetPlayerPosition();
+    }
+
+    public void changePhase()
+    {
+
+        currentPhase++;
+        cleanPointsLabels();
+
+        switch (currentPhase)
+        {
+            case 1:
+
+                if (interestPoints.Length > currentScene)
+                {
+                    interestPoints[currentScene].SetActive(true);
+                    interestPoints[currentScene].transform.GetChild(0).gameObject.SetActive(true);
+                }
+
+                removeParticleInteraction(true);
+                resetParticlePosition();
+                setPhaseLabel();
+                break;
+            case 2:
+
+                removeParticleInteraction(false);
+                resetParticlePosition();
+                setPhaseLabel();
+                // Show indicators to move particles
+                break;
+            case 3:
+                currentPhase = 0;
+                nextScene();
+                break;
+        }
     }
 
     #endregion
@@ -958,6 +1003,15 @@ public class SimulationController : MonoBehaviour
         OVRplayer.enabled = true;
     }
 
+    void moveToLobby()
+    {
+        var OVRplayer = player.GetComponent<OVRPlayerController>();
+        OVRplayer.enabled = false;
+        player.transform.position = new Vector3(-185.0f, -1.5f, -6f);
+        player.transform.rotation = Quaternion.identity;
+        OVRplayer.enabled = true;
+    }
+
     void getUserID()
     {
         if (PlayerPrefs.GetInt("playerID") == 0)
@@ -997,6 +1051,19 @@ public class SimulationController : MonoBehaviour
         }
     }
 
+    void setPhaseLabel()
+    {
+        phaseLabel.GetComponent<UnityEngine.UI.Text>().text = PhaseNames[currentPhase];
+    }
+
+    void resetParticlePosition()
+    {
+        for (int i = 0; i < charges.Length; ++i)
+        {
+            particles[i].transform.position = initialPositions[i];
+            updateIsosurface();
+        }
+    }
     #endregion
 }
 
