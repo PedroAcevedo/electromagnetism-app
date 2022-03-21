@@ -12,7 +12,6 @@ public class SceneController : MonoBehaviour
 
     private SceneData introScene;
     private Timer timer;
-    private GameObject cubeTest;
     private DataCollectionController dataController;
 
     void Start()
@@ -27,7 +26,6 @@ public class SceneController : MonoBehaviour
         InvokeRepeating("reportUser", 2.0f, 2.0f);
 
         timer = new Timer();
-        cubeTest = GameObject.Find("RotationCube");
         timer.start();
 
     }
@@ -41,9 +39,16 @@ public class SceneController : MonoBehaviour
     {
         dataController.ButtonsPressed(ref introScene);
 
-        cubeTest.transform.rotation = player.transform.rotation;
-
         timer.run();
+    }
+
+    void resetPlayerPosition()
+    {
+        var OVRplayer = player.GetComponent<OVRPlayerController>();
+        OVRplayer.enabled = false;
+        player.transform.position = new Vector3(0.0f, -1.5f, -15f);
+        player.transform.rotation = Quaternion.identity;
+        OVRplayer.enabled = true;
     }
 
     public void GoToSimulation()
@@ -63,8 +68,10 @@ public class SceneController : MonoBehaviour
 
         loadingScreen.SetActive(true);
 
-        SceneManager.LoadSceneAsync("GameScene");
+        resetPlayerPosition();
 
-        Debug.Log("Its open, lets wait");
+        //SceneManager.LoadSceneAsync("GameScene");
+
+       //Debug.Log("Its open, lets wait");
     }
 }

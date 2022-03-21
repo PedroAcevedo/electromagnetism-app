@@ -160,7 +160,7 @@ public class SimulationController : MonoBehaviour
         }
 
         //Verify Hands
-        verifyHand();
+        //verifyHand();
 
         //User ID
         getUserID();
