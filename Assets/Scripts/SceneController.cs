@@ -6,17 +6,19 @@ using UnityEngine.SceneManagement;
 public class SceneController : MonoBehaviour
 {
     public bool LeftHander = false;
-    public GameObject loadingScreen;
     public static UserReportController controller;
     public GameObject player;
 
     private SceneData introScene;
     private Timer timer;
     private DataCollectionController dataController;
+    private bool StopTrack = false;
 
     void Start()
     {
         controller = new UserReportController();
+
+        Debug.Log("Delimitated user controller");
 
         introScene = new SceneData();
         controller.SceneInfo(introScene);
@@ -32,23 +34,29 @@ public class SceneController : MonoBehaviour
 
     void reportUser()
     {
-        dataController.reportUser(ref introScene, player);
+        if (!StopTrack)
+        {
+            dataController.reportUser(ref introScene, player);
+        }
     }
 
     void Update()
     {
-        dataController.ButtonsPressed(ref introScene);
+        if (!StopTrack)
+        {
+            dataController.ButtonsPressed(ref introScene);
 
-        timer.run();
+            timer.run();
+        }
     }
 
     void resetPlayerPosition()
     {
-        var OVRplayer = player.GetComponent<OVRPlayerController>();
-        OVRplayer.enabled = false;
-        player.transform.position = new Vector3(0.0f, -1.5f, -15f);
-        player.transform.rotation = Quaternion.identity;
-        OVRplayer.enabled = true;
+        var OVRplayer = player.transform.GetChild(1).GetChild(0); //.GetComponent<OVRPlayerController>();
+        //OVRplayer.enabled = false;
+        OVRplayer.position = new Vector3(0.0f, OVRplayer.position.y, -15f);
+        OVRplayer.rotation = Quaternion.identity;
+        //OVRplayer.enabled = true;
     }
 
     public void GoToSimulation()
@@ -66,7 +74,7 @@ public class SceneController : MonoBehaviour
 
         PlayerPrefs.SetInt("LeftHander", left);
 
-        loadingScreen.SetActive(true);
+        timer.stop();
 
         resetPlayerPosition();
 

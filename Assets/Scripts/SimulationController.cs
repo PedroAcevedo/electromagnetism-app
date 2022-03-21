@@ -28,7 +28,8 @@ public class SimulationController : MonoBehaviour
     public GameObject MenuCanvas;
     public GameObject SceneControl;
     public GameObject[] interestPoints;
-    public int HMDNumber;
+    public GameObject Indicators;
+    public int HMDNumber;           // Change between HeadSets
 
     //For debugging 
     public bool DEBUG_GRID = false;
@@ -127,8 +128,10 @@ public class SimulationController : MonoBehaviour
     //User stats
     private GameObject player;
     private string playerID;
+    public static UserReportController controller;
 
-    private string[] PhaseNames = { "Exploration Phase", "Simulation Phase", "Final Phase" };
+
+    private string[] PhaseNames = { "Exploration Phase", "Reference Phase", "Interactive Phase" };
 
     #endregion
 
@@ -555,8 +558,6 @@ public class SimulationController : MonoBehaviour
     {
         for (int i = 0; i < particlesOnScene.Length; ++i)
         {
-            //particlesOnScene[i].GetComponent<OVRGrabbable>().enabled = !particlesOnScene[i].GetComponent<OVRGrabbable>().enabled;
-            //particlesOnScene[i].GetComponent<SphereCollider>().enabled = !particlesOnScene[i].GetComponent<SphereCollider>().enabled;
             particlesOnScene[i].GetComponent<Rigidbody>().freezeRotation  = value;
 
             if (value)
@@ -566,6 +567,7 @@ public class SimulationController : MonoBehaviour
             else
             {
                 particlesOnScene[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                particlesOnScene[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationZ;
             }
         }
     }
@@ -640,7 +642,7 @@ public class SimulationController : MonoBehaviour
                 particleSignText[i].GetComponent<TextMeshPro>().text = "+";
             }
 
-            particlesOnScene[i].transform.LookAt(MainCamera);
+            particlesOnScene[i].transform.LookAt(new Vector3(0.0f, 5.30000019f, -15.0f));
 
         }
 
@@ -779,7 +781,7 @@ public class SimulationController : MonoBehaviour
         switch (simulationMode)
         {
             case 0: // Condition 1: No force label
-                showLines = true;
+                showLine(true);
                 hapticFeedback = false;
                 simpleMode = false;
                 break;
@@ -807,10 +809,17 @@ public class SimulationController : MonoBehaviour
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].SetActive(true);
-            particles[i].transform.LookAt(MainCamera);
         }
 
         showSurfaceState(true);
+
+        SceneData scene = new SceneData();
+
+        Debug.Log(SceneController.controller);
+
+        SceneController.controller.SceneInfo(scene);
+
+        SceneController.controller.SaveIntoJson(playerID);
 
     }
 
@@ -862,12 +871,14 @@ public class SimulationController : MonoBehaviour
                 break;
             case 2:
 
+                Indicators.SetActive(true);
                 removeParticleInteraction(false);
                 resetParticlePosition();
                 setPhaseLabel();
                 // Show indicators to move particles
                 break;
             case 3:
+                Indicators.SetActive(false);
                 currentPhase = 0;
                 nextScene();
                 break;
@@ -996,20 +1007,19 @@ public class SimulationController : MonoBehaviour
 
     void resetPlayerPosition()
     {
-        var OVRplayer = player.GetComponent<OVRPlayerController>();
-        OVRplayer.enabled = false;
-        player.transform.position = new Vector3(0.0f, -1.5f, -15f);
-        player.transform.rotation = Quaternion.identity;
-        OVRplayer.enabled = true;
+        var OVRplayer = player.transform.GetChild(1).GetChild(0); //.GetComponent<OVRPlayerController>();
+        //OVRplayer.enabled = false;
+        OVRplayer.position = new Vector3(0.0f, OVRplayer.position.y, -15f);
+        OVRplayer.rotation = Quaternion.identity;
+        //OVRplayer.enabled = true;
     }
 
     void moveToLobby()
     {
-        var OVRplayer = player.GetComponent<OVRPlayerController>();
-        OVRplayer.enabled = false;
-        player.transform.position = new Vector3(-185.0f, -1.5f, -6f);
-        player.transform.rotation = Quaternion.identity;
-        OVRplayer.enabled = true;
+        var OVRplayer = player.transform.GetChild(1).GetChild(0); //.GetComponent<OVRPlayerController>();
+        OVRplayer.transform.position = new Vector3(-185.0f, OVRplayer.position.y, - 6f);
+        OVRplayer.rotation = Quaternion.identity;
+
     }
 
     void getUserID()
@@ -1027,12 +1037,6 @@ public class SimulationController : MonoBehaviour
         playerID = "HMD" + HMDNumber + "-" + PlayerPrefs.GetInt("playerID");
 
         playerIDLabel.GetComponent<UnityEngine.UI.Text>().text = "Student ID: " + playerID;
-
-        //SceneData scene = new SceneData();
-
-        //SceneController.controller.SceneInfo(scene);
-
-        //SceneController.controller.SaveIntoJson(playerID);
     }
 
     void cleanPointsLabels()
