@@ -25,6 +25,8 @@ public class SimulationController : MonoBehaviour
     public UnityEngine.UI.Text playerIDLabel;
     public UnityEngine.UI.Text partLabel;
     public UnityEngine.UI.Text phaseLabel;
+    public UnityEngine.UI.Text lobbyLabel;
+    public UnityEngine.UI.Text phaseInstruction;
     public GameObject MenuCanvas;
     public GameObject SceneControl;
     public GameObject[] interestPoints;
@@ -44,6 +46,9 @@ public class SimulationController : MonoBehaviour
     public bool simpleMode;
     public bool showMenu;
     public bool particleInteraction;
+
+    // Phase control
+    public List<string> instructions;
 
     #endregion
 
@@ -650,7 +655,7 @@ public class SimulationController : MonoBehaviour
         charges = tempCharges;
         n = particles.Length;
         partLabel.GetComponent<UnityEngine.UI.Text>().text = "Part " + (currentScene + 1);
-        phaseLabel.GetComponent<UnityEngine.UI.Text>().text = PhaseNames[currentPhase];
+        setPhaseLabel();
     }
 
     //Hand raycasting
@@ -763,15 +768,22 @@ public class SimulationController : MonoBehaviour
 
             updateIsosurface();
 
-            moveToLobby();
-
+        } else
+        {
+            if(currentScene == numberOfParticles.Length)
+            {
+                moveToLobby();
+                // SAVE THE JSON FILE
+                lobbyLabel.GetComponent<UnityEngine.UI.Text>().text = "The session is over, thanks for your participation. You can remove your headset now.";
+                GameObject.Find("ReturnMain").SetActive(false);
+            }
         }
 
     }
 
     public bool getCurrentMode()
     {
-        return simulationMode == 0 || simulationMode == 2;
+        return simulationMode == 0 || simulationMode == 2 || (simulationMode == 3 && showLines);
     }
 
     public void selectMode(int modeSelected)
@@ -858,7 +870,6 @@ public class SimulationController : MonoBehaviour
         switch (currentPhase)
         {
             case 1:
-
                 if (interestPoints.Length > currentScene)
                 {
                     interestPoints[currentScene].SetActive(true);
@@ -880,7 +891,28 @@ public class SimulationController : MonoBehaviour
             case 3:
                 Indicators.SetActive(false);
                 currentPhase = 0;
-                nextScene();
+
+                if (simulationMode == 3 && !showLines)
+                {
+                    showLine(true);
+                    resetInterestPoint();
+                    resetParticlePosition();
+                    setPhaseLabel();
+                }
+                else
+                {
+
+                    if(simulationMode == 3)
+                    {
+                        showLine(false);
+                    }
+
+                    nextScene();
+                    moveToLobby();
+                }
+
+                
+                
                 break;
         }
     }
@@ -949,7 +981,7 @@ public class SimulationController : MonoBehaviour
                     lessDistanceR = Vector3.Distance(pointPos, RPos);
                 }
 
-                if (Vector3.Distance(pointPos, RPos) < lessDistanceL)
+                if (Vector3.Distance(pointPos, LPos) < lessDistanceL)
                 {
                     LAmplitude = pointsCharges[Int32.Parse(indexQuad[i])];
                     lessDistanceL = Vector3.Distance(pointPos, LPos);
@@ -1058,6 +1090,7 @@ public class SimulationController : MonoBehaviour
     void setPhaseLabel()
     {
         phaseLabel.GetComponent<UnityEngine.UI.Text>().text = PhaseNames[currentPhase];
+        phaseInstruction.GetComponent<UnityEngine.UI.Text>().text = instructions[currentPhase];
     }
 
     void resetParticlePosition()
