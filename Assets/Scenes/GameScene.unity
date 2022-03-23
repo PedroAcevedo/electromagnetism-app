@@ -8917,6 +8917,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftHander: 0
   player: {fileID: 842882031}
+  particles:
+  - {fileID: 827578922}
+  - {fileID: 1870382962}
 --- !u!1 &1113289306
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,10 +21,7 @@ public class Timer
     {
         if (timerIsRunning)
         {
-            if (currentTime > 0)
-            {
-                currentTime += Time.deltaTime;
-            }
+            currentTime += Time.deltaTime;
         }
     }
 

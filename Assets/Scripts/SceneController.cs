@@ -8,11 +8,14 @@ public class SceneController : MonoBehaviour
     public bool LeftHander = false;
     public static UserReportController controller;
     public GameObject player;
+    public GameObject[] particles;
 
     private SceneData introScene;
     private Timer timer;
     private DataCollectionController dataController;
     private bool StopTrack = false;
+    private bool isGrabbing = true;
+    private float[] initialTimePerParticle;
 
     void Start()
     {
@@ -25,9 +28,18 @@ public class SceneController : MonoBehaviour
 
         dataController = new DataCollectionController();
 
+        initialTimePerParticle = new float[particles.Length];
+
+        for (int i = 0; i < initialTimePerParticle.Length; ++i)
+        {
+            initialTimePerParticle[0] = 0.0f;
+            introScene.particlePositions.Add(new ParticleData(i == 0, particles[i].transform.position));
+        }
+
         InvokeRepeating("reportUser", 2.0f, 2.0f);
 
         timer = new Timer();
+
         timer.start();
 
     }
@@ -40,12 +52,66 @@ public class SceneController : MonoBehaviour
         }
     }
 
+    void validateGrab()
+    {
+        for (int i = 0; i < particles.Length; ++i)
+        {
+            if (particles[i].transform.hasChanged)
+            {
+                particles[i].transform.hasChanged = false;
+
+                if (!isGrabbing)
+                {
+                    if (particles[i].GetComponent<OVRGrabbable>().isGrabbed)
+                    {
+                        isGrabbing = true;
+                        initialTimePerParticle[i] = timer.currentTime;
+                    }
+                }
+                break;
+            }
+        }
+
+        bool isStatic = true;
+
+        for (int i = 0; i < particles.Length; ++i)
+        {
+            if(!particles[i].GetComponent<OVRGrabbable>().isGrabbed && initialTimePerParticle[i] != 0.0f)
+            {
+                if(i == 0)
+                {
+                    introScene.positiveParticleGrabTime += (timer.currentTime - initialTimePerParticle[i]);
+                }
+                else
+                {
+                    introScene.negativeParticleGrabTime += (timer.currentTime - initialTimePerParticle[i]);
+                }
+
+                initialTimePerParticle[i] = 0.0f;
+            }
+
+            isStatic = isStatic && !particles[i].GetComponent<OVRGrabbable>().isGrabbed;
+        }
+
+        if (isGrabbing && isStatic)
+        {
+            isGrabbing = false;
+
+            for (int i = 0; i < introScene.particlePositions.Count; ++i)
+            {
+                introScene.particlePositions[i].addPosition(particles[i].transform.position);
+            }
+        }
+    }
+
     void Update()
     {
         if (!StopTrack)
         {
             dataController.ButtonsPressed(ref introScene);
 
+            validateGrab();
+            
             timer.run();
         }
     }

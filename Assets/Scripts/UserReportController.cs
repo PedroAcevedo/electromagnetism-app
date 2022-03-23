@@ -73,10 +73,16 @@ public class ParticleData
     public bool isPositive;
     public List<Vector3> positions;
 
-    public ParticleData(bool isPositive)
+    public ParticleData(bool isPositive, Vector3 position)
     {
         this.isPositive = isPositive;
         this.positions = new List<Vector3>();
+        addPosition(position);
+    }
+
+    public void addPosition(Vector3 position)
+    {
+        positions.Add(position);
     }
 }
 
