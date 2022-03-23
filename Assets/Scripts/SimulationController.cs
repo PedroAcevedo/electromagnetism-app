@@ -881,7 +881,6 @@ public class SimulationController : MonoBehaviour
                 setPhaseLabel();
                 break;
             case 2:
-
                 Indicators.SetActive(true);
                 removeParticleInteraction(false);
                 resetParticlePosition();
@@ -890,6 +889,7 @@ public class SimulationController : MonoBehaviour
                 break;
             case 3:
                 Indicators.SetActive(false);
+                Indicators.GetComponent<IndicatorController>().resetIndicators();
                 currentPhase = 0;
 
                 if (simulationMode == 3 && !showLines)

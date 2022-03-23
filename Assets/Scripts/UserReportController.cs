@@ -17,7 +17,7 @@ public class UserReportController
     {
         ScenesData levelsData = new ScenesData(scenes, userId);
         string data = JsonUtility.ToJson(levelsData);
-        System.IO.File.WriteAllText(Application.dataPath + "/Resources/user-" + userId + "-" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + "-.json", data);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/user-" + userId + "-" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + "-.json", data);
     }
 
 }
