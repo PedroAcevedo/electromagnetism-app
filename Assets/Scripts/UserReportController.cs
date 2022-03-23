@@ -90,13 +90,13 @@ public class ParticleData
 [System.Serializable]
 public class InterestPointData
 {
-    public List<Vector3> positions;
+    public Vector3 position;
     public float interactionTime;
 
-    public InterestPointData(bool isPositive)
+    public InterestPointData(Vector3 position, float interactionTime)
     {
-        this.positions = new List<Vector3>();
-        interactionTime = 0.0f;
+        this.position = position;
+        this.interactionTime = interactionTime;
     }
 }
 

@@ -1595,6 +1595,7 @@ MonoBehaviour:
   RHand: {fileID: 0}
   LHand: {fileID: 0}
   intensity: 1
+  interactionTime: 0
 --- !u!65 &288989299
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8920,6 +8921,9 @@ MonoBehaviour:
   particles:
   - {fileID: 827578922}
   - {fileID: 1870382962}
+  interactionPoints:
+  - {fileID: 288989296}
+  - {fileID: 1199501833}
 --- !u!1 &1113289306
 GameObject:
   m_ObjectHideFlags: 0
@@ -9833,6 +9837,7 @@ MonoBehaviour:
   RHand: {fileID: 0}
   LHand: {fileID: 0}
   intensity: 0.5
+  interactionTime: 0
 --- !u!65 &1199501836
 BoxCollider:
   m_ObjectHideFlags: 0

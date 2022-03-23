@@ -9,6 +9,8 @@ public class SceneController : MonoBehaviour
     public static UserReportController controller;
     public GameObject player;
     public GameObject[] particles;
+    public GameObject[] interactionPoints;
+
 
     private SceneData introScene;
     private Timer timer;
@@ -129,6 +131,12 @@ public class SceneController : MonoBehaviour
     {
         introScene.UIClick += 1;
         introScene.sceneTime = timer.currentTime;
+
+        for (int i = 0; i < interactionPoints.Length; ++i)
+        {
+            float interactionTime = interactionPoints[i].GetComponent<CircleVibration>().interactionTime;
+            introScene.interestPointDuration.Add(new InterestPointData(interactionPoints[i].transform.position, interactionTime));
+        }
 
         int left = 0;
 
