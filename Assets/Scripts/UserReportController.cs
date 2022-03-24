@@ -65,6 +65,22 @@ public class SceneData
         sceneTime = 0.0f;
     }
 
+
+    public void copyScene(SceneData scene)
+    {
+        isosurfaceCalculate = scene.isosurfaceCalculate;
+        UIClick = scene.UIClick;
+        leftHandButtonPress = scene.leftHandButtonPress;
+        rightHandButtonPress = scene.rightHandButtonPress;
+        particlePositions = scene.particlePositions;
+        interestPointDuration = scene.interestPointDuration;
+        positiveParticleGrabTime = scene.positiveParticleGrabTime;
+        negativeParticleGrabTime = scene.negativeParticleGrabTime;
+        userPosition = scene.userPosition;
+        userRotation = scene.userRotation;
+        sceneTime = scene.sceneTime;
+    }
+
 }
 
 [System.Serializable]

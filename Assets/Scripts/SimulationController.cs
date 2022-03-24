@@ -120,6 +120,7 @@ public class SimulationController : MonoBehaviour
     private Vector3[] initialPositions = { new Vector3(0.0f, 3.0f, 0.0f), new Vector3(-3.0f, 0.0f, 0.0f), new Vector3(3.0f, 0.0f, 0.0f) };
     private GameObject[] particlesOnScene;
     private float[] chargesOnScene;
+    private float[] initialTimePerParticle;
     private int currentScene = 0;
     private Transform MainCamera;
     private GameObject[] particleSignText;
@@ -131,10 +132,12 @@ public class SimulationController : MonoBehaviour
     private bool updateSurface = false;
     
     //User stats
+    public static UserReportController controller;
     private GameObject player;
     private string playerID;
-    public static UserReportController controller;
-
+    private SceneData mainScene;
+    private DataCollectionController dataController;
+    private bool reportData = false;
 
     private string[] PhaseNames = { "Exploration Phase", "Reference Phase", "Interactive Phase" };
 
@@ -159,19 +162,19 @@ public class SimulationController : MonoBehaviour
         }
 
         particleSignText = new GameObject[charges.Length];
+        initialTimePerParticle = new float[charges.Length];
 
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].SetActive(false);
             particleSignText[i] = particles[i].transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
             charges[i] = charges[i] * 1e-9f;
+            initialTimePerParticle[i] = 0.0f;
         }
 
-        //Verify Hands
-        //verifyHand();
-
-        //User ID
+        //User stats
         getUserID();
+        dataController = new DataCollectionController();
 
         // Select the scene
         arrowInField = Resources.Load("Prefabs/arrow_in_field") as GameObject;
@@ -219,6 +222,7 @@ public class SimulationController : MonoBehaviour
                     {
                         showSurfaceState(false);
                         cleanPointsLabels();
+                        initialTimePerParticle[i] = Time.time;
                     }
                 }
                 break;
@@ -229,12 +233,14 @@ public class SimulationController : MonoBehaviour
 
         for (int i = 0; i < particles.Length; ++i)
         {
+            validateParticleGrab(i);
             isStatic = isStatic && !particles[i].GetComponent<OVRGrabbable>().isGrabbed;
         }
 
         if (!showSurface && isStatic && simulationMode != -1)
         {
             updateIsosurface();
+            trackParticle();
         }
     }
 
@@ -252,6 +258,8 @@ public class SimulationController : MonoBehaviour
             //StartCoroutine(MarchingCubesRoutine());
         }
 
+        // User stats
+        UpdateStats();
     }
 
     #endregion
@@ -579,6 +587,7 @@ public class SimulationController : MonoBehaviour
 
     public void updateIsosurface()
     {
+        IsosurfaceCalculate();
         updateSurface = true;
         showSurface = true;
     }
@@ -825,14 +834,10 @@ public class SimulationController : MonoBehaviour
 
         showSurfaceState(true);
 
-        SceneData scene = new SceneData();
-
-        Debug.Log(SceneController.controller);
-
-        SceneController.controller.SceneInfo(scene);
-
-        SceneController.controller.SaveIntoJson(playerID);
-
+        //Start Scene 1 stats
+        startScene();
+        initReport();
+        UIClick();
     }
 
     public void selectCond1()
@@ -859,6 +864,7 @@ public class SimulationController : MonoBehaviour
     {
         currentPhase = 0;
         resetPlayerPosition();
+        startScene();
     }
 
     public void changePhase()
@@ -866,6 +872,7 @@ public class SimulationController : MonoBehaviour
 
         currentPhase++;
         cleanPointsLabels();
+        UIClick();
 
         switch (currentPhase)
         {
@@ -891,6 +898,9 @@ public class SimulationController : MonoBehaviour
                 Indicators.SetActive(false);
                 Indicators.GetComponent<IndicatorController>().resetIndicators();
                 currentPhase = 0;
+
+                saveSceneData();
+                saveJson();
 
                 if (simulationMode == 3 && !showLines)
                 {
@@ -1098,9 +1108,127 @@ public class SimulationController : MonoBehaviour
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].transform.position = initialPositions[i];
-            updateIsosurface();
+        }
+
+        updateIsosurface();
+        trackParticle();
+    }
+
+    #endregion
+
+    #region User Stats
+
+    void startScene()
+    {
+        mainScene = new SceneData();
+        mainScene.sceneTime = Time.time;
+
+        for (int i = 0; i < particles.Length; ++i)
+        {
+            mainScene.particlePositions.Add(new ParticleData(charges[i] > 0, particles[i].transform.position));
+            initialTimePerParticle[i] = 0.0f;
+        }
+
+        reportData = true;
+    }
+
+    void UpdateStats()
+    {
+        if (reportData)
+        {
+            dataController.ButtonsPressed(ref mainScene);
         }
     }
+
+    void UIClick()
+    {
+        mainScene.UIClick += 1;
+    }
+
+    void IsosurfaceCalculate()
+    {
+        mainScene.isosurfaceCalculate += 1;
+    }
+
+    void calculateInterestPointInteraction()
+    {
+        if (interestPoints.Length > currentScene)
+        {
+            for (int i = 0; i < interestPoints[currentScene].transform.childCount; ++i)
+            {
+                GameObject point = interestPoints[currentScene].transform.GetChild(i).gameObject;
+                float interactionTime = point.GetComponent<InterestPoint>().interactionTime;
+                mainScene.interestPointDuration.Add(new InterestPointData(point.transform.position, interactionTime));
+            }
+
+        }
+    }
+
+    void trackParticle()
+    {
+        for (int i = 0; i < mainScene.particlePositions.Count; ++i)
+        {
+            mainScene.particlePositions[i].addPosition(particles[i].transform.position);
+        }
+    }
+
+    void validateParticleGrab(int i)
+    {
+        if (!particles[i].GetComponent<OVRGrabbable>().isGrabbed && initialTimePerParticle[i] != 0.0f)
+        {
+            if (charges[i] > 0)
+            {
+                mainScene.positiveParticleGrabTime += (Time.time - initialTimePerParticle[i]);
+            }
+            else
+            {
+                mainScene.negativeParticleGrabTime += (Time.time - initialTimePerParticle[i]);
+            }
+
+            initialTimePerParticle[i] = 0.0f;
+        }
+    }
+
+    void resetParticleTime()
+    {
+        for (int i = 0; i < charges.Length; ++i)
+        {
+            initialTimePerParticle[i] = 0.0f;
+        }
+    }
+
+    void saveSceneData()
+    {
+        mainScene.sceneTime = (Time.time - mainScene.sceneTime);
+        calculateInterestPointInteraction();
+
+        SceneData scene = new SceneData();
+
+        reportData = false;
+
+        scene.copyScene(mainScene);
+
+        SceneController.controller.SceneInfo(scene);
+    }
+
+    void saveJson()
+    {
+        SceneController.controller.SaveIntoJson(playerID);
+    }
+
+    void reportUser()
+    {
+        if (reportData)
+        {
+            dataController.reportUser(ref mainScene, player);
+        }
+    }
+
+    void initReport()
+    {
+        InvokeRepeating("reportUser", 2.0f, 2.0f);
+    }
+
     #endregion
 }
 

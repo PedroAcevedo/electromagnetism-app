@@ -12,10 +12,14 @@ public class InterestPoint : MonoBehaviour
     private Color touchedColor = Color.black;
     private Color originColor = new Color(0.0f, 0.0f, 0.0f);
 
+    public float interactionTime = 0.0f;
+
+    private float startTime = 0.0f;
+
     public void OnTriggerEnter(Collider other)
     {
         this.gameObject.GetComponent<Renderer>().material.color = touchedColor;
-
+        
         if (this.showLabel())
         {
             changeValue();
@@ -24,6 +28,19 @@ public class InterestPoint : MonoBehaviour
         if (nextPoint != null)
         {
             nextPoint.SetActive(true);
+        }
+
+        if (other.gameObject.name == "RightHandAnchor" || other.gameObject.name == "LeftHandAnchor")
+        {
+            startTime = Time.time;
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.name == "RightHandAnchor" || other.gameObject.name == "LeftHandAnchor")
+        {
+            interactionTime += (Time.time - startTime);
         }
     }
 
