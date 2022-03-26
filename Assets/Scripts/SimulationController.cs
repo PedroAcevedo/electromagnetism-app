@@ -139,7 +139,7 @@ public class SimulationController : MonoBehaviour
     private DataCollectionController dataController;
     private bool reportData = false;
 
-    private string[] PhaseNames = { "Exploration Phase", "Reference Phase", "Interactive Phase" };
+    private string[] PhaseNames = { "Exploration Phase", "Experimental Phase", "Interactive Phase" };
 
     #endregion
 
@@ -782,6 +782,7 @@ public class SimulationController : MonoBehaviour
             if(currentScene == numberOfParticles.Length)
             {
                 moveToLobby();
+                saveJson();
                 // SAVE THE JSON FILE
                 lobbyLabel.GetComponent<UnityEngine.UI.Text>().text = "The session is over, thanks for your participation. You can remove your headset now.";
                 GameObject.Find("ReturnMain").SetActive(false);
@@ -900,7 +901,6 @@ public class SimulationController : MonoBehaviour
                 currentPhase = 0;
 
                 saveSceneData();
-                saveJson();
 
                 if (simulationMode == 3 && !showLines)
                 {

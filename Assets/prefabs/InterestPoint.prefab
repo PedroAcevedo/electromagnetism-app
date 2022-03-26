@@ -114,6 +114,7 @@ MonoBehaviour:
   TimeActive: 5
   nextPoint: {fileID: 0}
   MarchingRef: {fileID: 0}
+  interactionTime: 0
 --- !u!1001 &5694960366961029826
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -281,11 +282,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2537780867674421032, guid: 5f71bc1a210690b46b184c0df5d87c00, type: 3}
       propertyPath: m_text
-      value: A
+      value: P1
       objectReference: {fileID: 0}
     - target: {fileID: 2537780867674421032, guid: 5f71bc1a210690b46b184c0df5d87c00, type: 3}
       propertyPath: m_fontSize
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2537780867674421032, guid: 5f71bc1a210690b46b184c0df5d87c00, type: 3}
       propertyPath: m_margin.x
@@ -293,7 +294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2537780867674421032, guid: 5f71bc1a210690b46b184c0df5d87c00, type: 3}
       propertyPath: m_margin.z
-      value: 3.1330616
+      value: 2.9449723
       objectReference: {fileID: 0}
     - target: {fileID: 2537780867674421032, guid: 5f71bc1a210690b46b184c0df5d87c00, type: 3}
       propertyPath: m_fontStyle
@@ -313,7 +314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2537780867674421032, guid: 5f71bc1a210690b46b184c0df5d87c00, type: 3}
       propertyPath: m_fontSizeBase
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2537780867674421032, guid: 5f71bc1a210690b46b184c0df5d87c00, type: 3}
       propertyPath: m_fontColor32.rgba
