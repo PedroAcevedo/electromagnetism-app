@@ -117,7 +117,7 @@ public class SimulationController : MonoBehaviour
     // For Scene control
     private int[] numberOfParticles = { 2, 2, 2, 3 };
     private int[] negativeCharges = { 0, 2, 1, 2 };
-    private Vector3[] initialPositions = { new Vector3(0.0f, 3.0f, 0.0f), new Vector3(-3.0f, 0.0f, 0.0f), new Vector3(3.0f, 0.0f, 0.0f) };
+    private Vector3[] initialPositions = { new Vector3(-2.0f, 2.0f, 0.0f), new Vector3(2.0f, 2.0f, 0.0f), new Vector3(0.0f, 4.0f, 0.0f) };
     private GameObject[] particlesOnScene;
     private float[] chargesOnScene;
     private float[] initialTimePerParticle;
@@ -813,7 +813,7 @@ public class SimulationController : MonoBehaviour
                 simpleMode = true;
                 break;
             case 2: // Condition 1: force label
-                showLines = true;
+                showLine(true);
                 hapticFeedback = true;
                 simpleMode = true;
                 break;
