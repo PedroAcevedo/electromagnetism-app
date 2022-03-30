@@ -10,7 +10,8 @@ public class SceneController : MonoBehaviour
     public GameObject player;
     public GameObject[] particles;
     public GameObject[] interactionPoints;
-
+    public GameObject[] steps;
+    public GameObject stepButton;
 
     private SceneData introScene;
     private Timer timer;
@@ -18,6 +19,7 @@ public class SceneController : MonoBehaviour
     private bool StopTrack = false;
     private bool isGrabbing = true;
     private float[] initialTimePerParticle;
+    private int currentStep = 0;
 
     void Start()
     {
@@ -44,6 +46,7 @@ public class SceneController : MonoBehaviour
 
         timer.start();
 
+        steps[currentStep].SetActive(true);
     }
 
     void reportUser()
@@ -155,5 +158,17 @@ public class SceneController : MonoBehaviour
         //SceneManager.LoadSceneAsync("GameScene");
 
        //Debug.Log("Its open, lets wait");
+    }
+
+    public void changeStep()
+    {
+        steps[currentStep].SetActive(false);
+        currentStep++;
+        steps[currentStep].SetActive(true);
+
+        if(currentStep == 4)
+        {
+            stepButton.SetActive(false);
+        }
     }
 }
