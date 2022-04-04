@@ -31,6 +31,8 @@ public class SimulationController : MonoBehaviour
     public GameObject SceneControl;
     public GameObject[] interestPoints;
     public GameObject Indicators;
+    public GameObject LobbyMenu;
+    public GameObject LobbyQuestion;
     public int HMDNumber;           // Change between HeadSets
 
     //For debugging 
@@ -784,8 +786,8 @@ public class SimulationController : MonoBehaviour
                 moveToLobby();
                 saveJson();
                 // SAVE THE JSON FILE
-                lobbyLabel.GetComponent<UnityEngine.UI.Text>().text = "The session is over, thanks for your participation. You can remove your headset now.";
-                GameObject.Find("ReturnMain").SetActive(false);
+                lobbyLabel.GetComponent<UnityEngine.UI.Text>().text = "Thanks for your participation!";
+                GameObject.Find("GoToQuestion").SetActive(false);
             }
         }
 
@@ -861,10 +863,24 @@ public class SimulationController : MonoBehaviour
         selectMode(3);
     }
 
+    public void goToQuestion()
+    {
+        LobbyMenu.SetActive(false);
+        LobbyQuestion.SetActive(true);
+    }
+    
+    public void goBackToMenu()
+    {
+        LobbyQuestion.SetActive(false);
+        LobbyMenu.SetActive(true);
+    }
+
     public void returnToMain()
     {
         currentPhase = 0;
         resetPlayerPosition();
+        LobbyQuestion.SetActive(false);
+        LobbyMenu.SetActive(true);
         startScene();
     }
 
