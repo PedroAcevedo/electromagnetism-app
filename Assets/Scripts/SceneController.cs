@@ -12,6 +12,8 @@ public class SceneController : MonoBehaviour
     public GameObject[] interactionPoints;
     public GameObject[] steps;
     public GameObject stepButton;
+    public GameObject previusButton;
+
 
     private SceneData introScene;
     private Timer timer;
@@ -152,6 +154,7 @@ public class SceneController : MonoBehaviour
         PlayerPrefs.SetInt("LeftHander", left);
 
         timer.stop();
+        StopTrack = true;
 
         resetPlayerPosition();
 
@@ -160,8 +163,28 @@ public class SceneController : MonoBehaviour
        //Debug.Log("Its open, lets wait");
     }
 
+    public void previusStep()
+    {
+        introScene.UIClick += 1;
+
+        if (currentStep == 4)
+        {
+            stepButton.SetActive(true);
+        }
+
+        steps[currentStep].SetActive(false);
+        currentStep--;
+        steps[currentStep].SetActive(true);
+
+        if (currentStep == 0)
+        {
+            previusButton.SetActive(false);
+        }
+    }
+
     public void changeStep()
     {
+        introScene.UIClick += 1;
         steps[currentStep].SetActive(false);
         currentStep++;
         steps[currentStep].SetActive(true);
@@ -169,6 +192,12 @@ public class SceneController : MonoBehaviour
         if(currentStep == 4)
         {
             stepButton.SetActive(false);
+        } else
+        {
+            if (currentStep == 1)
+            {
+                previusButton.SetActive(true);
+            }
         }
     }
 }

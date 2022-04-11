@@ -49,6 +49,7 @@ public class SceneData
     public List<Vector3> userPosition;
     public List<Quaternion> userRotation;
     public float sceneTime;
+    public List<float> phaseTime;
 
     public SceneData()
     {
@@ -63,6 +64,7 @@ public class SceneData
         userPosition = new List<Vector3>();
         userRotation = new List<Quaternion>();
         sceneTime = 0.0f;
+        phaseTime = new List<float>();
     }
 
 
@@ -79,6 +81,7 @@ public class SceneData
         userPosition = scene.userPosition;
         userRotation = scene.userRotation;
         sceneTime = scene.sceneTime;
+        phaseTime = scene.phaseTime;
     }
 
 }

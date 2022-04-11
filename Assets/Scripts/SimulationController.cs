@@ -129,10 +129,11 @@ public class SimulationController : MonoBehaviour
     private GameObject arrowInField;
     private int simulationMode = -1;
     private int currentPhase = 0;
+    private float currentPhaseTime = 0;
 
     //Update actual view
     private bool updateSurface = false;
-    
+
     //User stats
     public static UserReportController controller;
     private GameObject player;
@@ -254,11 +255,11 @@ public class SimulationController : MonoBehaviour
             findHandsVibrationOptimized();
         }
 
-        if (OVRInput.GetDown(OVRInput.Button.Four))
-        {
-            returnToHome();
-            //StartCoroutine(MarchingCubesRoutine());
-        }
+        //if (OVRInput.GetDown(OVRInput.Button.Four))
+        //{
+        //    returnToHome();
+        //    //StartCoroutine(MarchingCubesRoutine());
+        //}
 
         // User stats
         UpdateStats();
@@ -573,7 +574,7 @@ public class SimulationController : MonoBehaviour
     {
         for (int i = 0; i < particlesOnScene.Length; ++i)
         {
-            particlesOnScene[i].GetComponent<Rigidbody>().freezeRotation  = value;
+            particlesOnScene[i].GetComponent<Rigidbody>().freezeRotation = value;
 
             if (value)
             {
@@ -781,7 +782,7 @@ public class SimulationController : MonoBehaviour
 
         } else
         {
-            if(currentScene == numberOfParticles.Length)
+            if (currentScene == numberOfParticles.Length)
             {
                 moveToLobby();
                 saveJson();
@@ -841,6 +842,7 @@ public class SimulationController : MonoBehaviour
         startScene();
         initReport();
         UIClick();
+        initPhaseTime();
     }
 
     public void selectCond1()
@@ -868,7 +870,7 @@ public class SimulationController : MonoBehaviour
         LobbyMenu.SetActive(false);
         LobbyQuestion.SetActive(true);
     }
-    
+
     public void goBackToMenu()
     {
         LobbyQuestion.SetActive(false);
@@ -890,6 +892,8 @@ public class SimulationController : MonoBehaviour
         currentPhase++;
         cleanPointsLabels();
         UIClick();
+        setPhaseTime();
+        initPhaseTime();
 
         switch (currentPhase)
         {
@@ -928,7 +932,7 @@ public class SimulationController : MonoBehaviour
                 else
                 {
 
-                    if(simulationMode == 3)
+                    if (simulationMode == 3)
                     {
                         showLine(false);
                     }
@@ -937,8 +941,8 @@ public class SimulationController : MonoBehaviour
                     moveToLobby();
                 }
 
-                
-                
+
+
                 break;
         }
     }
@@ -1075,7 +1079,7 @@ public class SimulationController : MonoBehaviour
     void moveToLobby()
     {
         var OVRplayer = player.transform.GetChild(1).GetChild(0); //.GetComponent<OVRPlayerController>();
-        OVRplayer.transform.position = new Vector3(-185.0f, OVRplayer.position.y, - 6f);
+        OVRplayer.transform.position = new Vector3(-185.0f, OVRplayer.position.y, -6f);
         OVRplayer.rotation = Quaternion.identity;
 
     }
@@ -1145,6 +1149,7 @@ public class SimulationController : MonoBehaviour
             initialTimePerParticle[i] = 0.0f;
         }
 
+        initPhaseTime();
         reportData = true;
     }
 
@@ -1203,6 +1208,16 @@ public class SimulationController : MonoBehaviour
 
             initialTimePerParticle[i] = 0.0f;
         }
+    }
+
+    void initPhaseTime()
+    {
+        currentPhaseTime = Time.time;
+    }
+
+    void setPhaseTime()
+    {
+        mainScene.phaseTime.Add(Time.time - currentPhaseTime);
     }
 
     void resetParticleTime()
