@@ -27,12 +27,14 @@ public class SimulationController : MonoBehaviour
     public UnityEngine.UI.Text phaseLabel;
     public UnityEngine.UI.Text lobbyLabel;
     public UnityEngine.UI.Text phaseInstruction;
+    public UnityEngine.UI.Text phaseInstruction2;
     public GameObject MenuCanvas;
     public GameObject SceneControl;
     public GameObject[] interestPoints;
     public GameObject Indicators;
     public GameObject LobbyMenu;
     public GameObject LobbyQuestion;
+    public GameObject InitialInstruction;
     public int HMDNumber;           // Change between HeadSets
 
     //For debugging 
@@ -688,7 +690,7 @@ public class SimulationController : MonoBehaviour
     //Reset interest point
     void resetInterestPoint()
     {
-        if (interestPoints.Length > currentScene)
+        if (interestPoints.Length > currentScene && currentScene >= 0)
         {
             interestPoints[currentScene].SetActive(false);
 
@@ -784,11 +786,20 @@ public class SimulationController : MonoBehaviour
         {
             if (currentScene == numberOfParticles.Length)
             {
-                moveToLobby();
-                saveJson();
-                // SAVE THE JSON FILE
-                lobbyLabel.GetComponent<UnityEngine.UI.Text>().text = "Thanks for your participation!";
-                GameObject.Find("GoToQuestion").SetActive(false);
+                if(simulationMode == 3)
+                {
+                    simulationMode = 2;
+                    currentScene = -1;
+                    showLine(true);
+                    ChangeScene(1);
+
+                } else
+                {
+                    moveToLobby();
+                    saveJson();
+                    lobbyLabel.GetComponent<UnityEngine.UI.Text>().text = "Thanks for your participation!";
+                    GameObject.Find("GoToQuestion").SetActive(false);
+                }
             }
         }
 
@@ -829,7 +840,7 @@ public class SimulationController : MonoBehaviour
 
         particleInteraction = true;
         MenuCanvas.SetActive(false);
-        SceneControl.SetActive(true);
+        InitIntructions();
 
         for (int i = 0; i < charges.Length; ++i)
         {
@@ -894,6 +905,7 @@ public class SimulationController : MonoBehaviour
         UIClick();
         setPhaseTime();
         initPhaseTime();
+        resetPlayerPosition();
 
         switch (currentPhase)
         {
@@ -921,30 +933,19 @@ public class SimulationController : MonoBehaviour
                 currentPhase = 0;
 
                 saveSceneData();
-
-                if (simulationMode == 3 && !showLines)
-                {
-                    showLine(true);
-                    resetInterestPoint();
-                    resetParticlePosition();
-                    setPhaseLabel();
-                }
-                else
-                {
-
-                    if (simulationMode == 3)
-                    {
-                        showLine(false);
-                    }
-
-                    nextScene();
-                    moveToLobby();
-                }
-
-
-
+                nextScene();
+                moveToLobby();
                 break;
         }
+
+        InitIntructions();
+    }
+
+    public void hideInstruction()
+    {
+        InitialInstruction.SetActive(false);
+        SceneControl.SetActive(true);
+
     }
 
     #endregion
@@ -1117,10 +1118,17 @@ public class SimulationController : MonoBehaviour
         }
     }
 
+    void InitIntructions()
+    {
+        SceneControl.SetActive(false);
+        InitialInstruction.SetActive(true);
+    }
+
     void setPhaseLabel()
     {
         phaseLabel.GetComponent<UnityEngine.UI.Text>().text = PhaseNames[currentPhase];
         phaseInstruction.GetComponent<UnityEngine.UI.Text>().text = instructions[currentPhase];
+        phaseInstruction2.GetComponent<UnityEngine.UI.Text>().text = instructions[currentPhase];
     }
 
     void resetParticlePosition()
