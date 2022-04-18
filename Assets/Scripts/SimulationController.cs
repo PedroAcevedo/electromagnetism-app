@@ -121,7 +121,7 @@ public class SimulationController : MonoBehaviour
     // For Scene control
     private int[] numberOfParticles = { 2, 2, 2, 3 };
     private int[] negativeCharges = { 0, 2, 1, 2 };
-    private Vector3[] initialPositions = { new Vector3(-2.0f, 2.0f, 0.0f), new Vector3(2.0f, 2.0f, 0.0f), new Vector3(0.0f, 4.0f, 0.0f) };
+    private Dictionary<String, Vector3> initialPositions = new Dictionary<String, Vector3>();
     private GameObject[] particlesOnScene;
     private float[] chargesOnScene;
     private float[] initialTimePerParticle;
@@ -169,13 +169,18 @@ public class SimulationController : MonoBehaviour
         particleSignText = new GameObject[charges.Length];
         initialTimePerParticle = new float[charges.Length];
 
+        Vector3[] positions = { new Vector3(-2.0f, 2.0f, 0.0f), new Vector3(2.0f, 2.0f, 0.0f), new Vector3(0.0f, 4.0f, 0.0f) };
+
         for (int i = 0; i < charges.Length; ++i)
         {
             particles[i].SetActive(false);
             particleSignText[i] = particles[i].transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
             charges[i] = charges[i] * 1e-9f;
             initialTimePerParticle[i] = 0.0f;
+            initialPositions[particles[i].name] = positions[i];
         }
+
+
 
         //User stats
         getUserID();
@@ -632,7 +637,6 @@ public class SimulationController : MonoBehaviour
         GameObject[] tempParticles = new GameObject[numberOfParticles[currentScene]];
         float[] tempCharges = new float[numberOfParticles[currentScene]];
 
-
         int negatives = negativeCharges[currentScene];
 
         for (int i = 0; i < tempParticles.Length; ++i)
@@ -641,7 +645,7 @@ public class SimulationController : MonoBehaviour
 
             int signal = 1;
 
-            if (negatives > 0)
+            if (negatives > 0 && i >= (tempCharges.Length - negatives))
             {
                 signal = -1;
                 negatives--;
@@ -652,18 +656,20 @@ public class SimulationController : MonoBehaviour
 
             if (tempCharges[i] < 0)
             {
-                particlesOnScene[i].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
+                tempParticles[i].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
                 particleSignText[i].GetComponent<TextMeshPro>().text = "-";
             }
             else
             {
-                particlesOnScene[i].GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+                tempParticles[i].GetComponent<Renderer>().material.SetColor("_Color", Color.red);
                 particleSignText[i].GetComponent<TextMeshPro>().text = "+";
             }
 
-            particlesOnScene[i].transform.LookAt(new Vector3(0.0f, 5.30000019f, -15.0f));
+            tempParticles[i].transform.LookAt(new Vector3(0.0f, 5.30000019f, -15.0f));
 
         }
+
+        Array.Clear(particles, 0, particles.Length);
 
         particles = tempParticles;
         charges = tempCharges;
@@ -753,7 +759,7 @@ public class SimulationController : MonoBehaviour
 
         if (currentScene >= 0 && currentScene < numberOfParticles.Length)
         {
-            for (int i = 0; i < charges.Length; ++i)
+            for (int i = 0; i < particles.Length; ++i)
             {
                 particles[i].SetActive(false);
             }
@@ -767,10 +773,10 @@ public class SimulationController : MonoBehaviour
 
             setupCurrentScene();
 
-            for (int i = 0; i < charges.Length; ++i)
+            for (int i = 0; i < particles.Length; ++i)
             {
                 particles[i].SetActive(true);
-                particles[i].transform.position = initialPositions[i];
+                particles[i].transform.position = initialPositions[particles[i].name];
             }
 
             lineController.CleanLines();
@@ -1133,9 +1139,9 @@ public class SimulationController : MonoBehaviour
 
     void resetParticlePosition()
     {
-        for (int i = 0; i < charges.Length; ++i)
+        for (int i = 0; i < particles.Length; ++i)
         {
-            particles[i].transform.position = initialPositions[i];
+            particles[i].transform.position = initialPositions[particles[i].name];
         }
 
         updateIsosurface();
