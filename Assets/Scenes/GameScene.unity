@@ -3205,7 +3205,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -3}
-  m_SizeDelta: {x: 400, y: 300}
+  m_SizeDelta: {x: 400, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &463632762
 MonoBehaviour:
@@ -6276,7 +6276,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -41, y: 15.71}
+  m_AnchoredPosition: {x: -41, y: 18.17}
   m_SizeDelta: {x: 1500, y: 623}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &716806812
@@ -9219,8 +9219,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -24.7}
-  m_SizeDelta: {x: 350, y: 200}
+  m_AnchoredPosition: {x: 0, y: -24}
+  m_SizeDelta: {x: 350, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &981840765
 MonoBehaviour:
@@ -9244,7 +9244,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 6921a454aa104cf47a67f59c64acaa17, type: 3}
-    m_FontSize: 22
+    m_FontSize: 18
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -9255,7 +9255,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: In this virtual environment, you see one positively charged and two negatively
+    charged particles. The particles have the same mass and charge and are at a distance
+    that A has influence over B, B has influence over C, C has influence A (and vice
+    versa in each case). Grab and move around the particle to observe the behavior.
+    Press the Next button to continue.
 --- !u!222 &981840766
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9820,15 +9824,51 @@ MonoBehaviour:
   showMenu: 0
   particleInteraction: 0
   instructions:
-  - The particles have the same mass and the same charge and are at a distance that
-    A have influence over B (and vice versa). Grab and move around the particles
-    to see the behavior.
-  - 'The particles have the same mass and the same charge and are at a distance that
-    A have influence over B (and vice versa). Explore the environment, specially
-    the hightighted points of interest around the positively charged particles. '
-  - Move the  charged particles closer to the area drew in the virtual environment. 
-    After that move it farther and explore the points of interest (P1, P2, P3...)
-    in both cases.
+  - In this virtual environment, you are seeing two positively charged particles.
+    Both particles have the same mass and charge and are at a distance that A has
+    to influence over B (and vice versa). Grab and move around the particles to observe
+    behavior. Press the Next button to continue.
+  - This virtual environment shows you two positively charged particles. Explore
+    the environment, especially the highlighted points of interest around the positively
+    charged particles. Once you finish, press the Next button to continue.
+  - Move the positively charged particles closer to the area drawn in the virtual
+    environment.  After that, move the particles farther and explore the points of
+    interest (P1, P2, P3) in both cases. Once you finish, press the Next button to
+    continue.
+  - In this virtual environment, you are seeing two negatively charged particles.
+    Both particles have the same mass and charge and are at a distance that A has
+    influence over B (and vice versa). Grab and move around the particles to observe
+    the behavior. Press the Next button to continue.
+  - This virtual environment shows you two negatively charged particles. Explore
+    the environment, especially the highlighted points of interest around the negatively
+    charged particles. Once you finish, press the Next button to continue.
+  - Move the negatively charged particles closer to the area drawn in the virtual
+    environment.  After that, move the particles farther and explore the points of
+    interest (P1, P2, P3) in both cases. Once you finish, press the Next button to
+    continue.
+  - In this virtual environment, you see one positively charged and one negatively
+    charged particle. Both particles have the same mass and charge and are at a distance
+    that A has influence over B (and vice versa). Grab and move around the particles
+    to observe the behavior. Once you finish, press the Next button to continue.
+  - This virtual environment shows you one positively charged and one negatively
+    charged particle. Explore the environment, especially the highlighted points
+    of interest around the charged particles. Once you finish, press the Next button
+    to continue.
+  - Move the charged particles closer to the area drawn in the virtual environment. 
+    After that, move the particles farther and explore the points of interest (P1,
+    P2, P3) in both cases. Once you finish, press the Next button to continue.
+  - In this virtual environment, you see one positively charged and two negatively
+    charged particles. The particles have the same mass and charge and are at a distance
+    that A has influence over B, B has influence over C, C has influence A (and vice
+    versa in each case). Grab and move around the particle to observe the behavior.
+    Press the Next button to continue.
+  - This virtual environment shows you one positively charged and two negatively
+    charged particles. Explore the environment, especially the highlighted points
+    of interest around the charged particles. Once you finish, press the Next button
+    to continue.
+  - Move the charged particles closer to the area drawn in the virtual environment. 
+    After that, move the particles farther and explore the points of interest (P1,
+    P2, P3) in both cases. Once you finish, press the Next button to continue.
 --- !u!23 &1062918404
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12178,7 +12218,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 6921a454aa104cf47a67f59c64acaa17, type: 3}
-    m_FontSize: 16
+    m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -12189,9 +12229,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'The particles have the same mass and the same charge and are at a distance
-    that A have influence over B (and vice versa). Explore the environment, specially
-    the hightighted points of interest around the positively charged particles. '
+  m_Text: In this virtual environment, you see one positively charged and two negatively
+    charged particles. The particles have the same mass and charge and are at a distance
+    that A has influence over B, B has influence over C, C has influence A (and vice
+    versa in each case). Grab and move around the particle to observe the behavior.
+    Press the Next button to continue.
 --- !u!222 &1398156265
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14112,7 +14154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 117}
+  m_AnchoredPosition: {x: 0, y: 136}
   m_SizeDelta: {x: 500, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1731670275

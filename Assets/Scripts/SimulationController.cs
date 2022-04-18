@@ -1133,8 +1133,8 @@ public class SimulationController : MonoBehaviour
     void setPhaseLabel()
     {
         phaseLabel.GetComponent<UnityEngine.UI.Text>().text = PhaseNames[currentPhase];
-        phaseInstruction.GetComponent<UnityEngine.UI.Text>().text = instructions[currentPhase];
-        phaseInstruction2.GetComponent<UnityEngine.UI.Text>().text = instructions[currentPhase];
+        phaseInstruction.GetComponent<UnityEngine.UI.Text>().text = instructions[3*currentScene + currentPhase];
+        phaseInstruction2.GetComponent<UnityEngine.UI.Text>().text = instructions[3*currentScene + currentPhase];
     }
 
     void resetParticlePosition()
