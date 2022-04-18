@@ -392,6 +392,9 @@ public class SimulationController : MonoBehaviour
             totalForce = totalForce + Utils.directionOfTheField(currentPosition, particles[i].transform.position, charges[i]) * electric_magnitude;
         }
 
+        if (totalForce == 1)
+            totalForce += 0.5f;
+
         return totalForce;
     }
 
