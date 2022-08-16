@@ -22,10 +22,12 @@ public class SceneController : MonoBehaviour
     private bool isGrabbing = true;
     private float[] initialTimePerParticle;
     private int currentStep = 0;
+    private CharacterController characterController;
 
     void Start()
     {
         controller = new UserReportController();
+        characterController = player.GetComponent<CharacterController>();
 
         Debug.Log("Delimitated user controller");
 
@@ -125,11 +127,10 @@ public class SceneController : MonoBehaviour
 
     void resetPlayerPosition()
     {
-        var OVRplayer = player.transform.GetChild(1).GetChild(0); //.GetComponent<OVRPlayerController>();
-        //OVRplayer.enabled = false;
-        OVRplayer.position = new Vector3(0.0f, OVRplayer.position.y, -15f);
-        OVRplayer.rotation = Quaternion.identity;
-        //OVRplayer.enabled = true;
+        characterController.enabled = false;
+        player.transform.position = new Vector3(0.0f, player.transform.position.y, -18f);
+        player.transform.rotation = Quaternion.identity;
+        characterController.enabled = true;
     }
 
     public void GoToSimulation()
@@ -157,10 +158,6 @@ public class SceneController : MonoBehaviour
         StopTrack = true;
 
         resetPlayerPosition();
-
-        //SceneManager.LoadSceneAsync("GameScene");
-
-       //Debug.Log("Its open, lets wait");
     }
 
     public void previusStep()

@@ -132,6 +132,8 @@ public class SimulationController : MonoBehaviour
     private int simulationMode = -1;
     private int currentPhase = 0;
     private float currentPhaseTime = 0;
+    private CharacterController characterController;
+    private Transform trackingSpace;
 
     //Update actual view
     private bool updateSurface = false;
@@ -192,6 +194,10 @@ public class SimulationController : MonoBehaviour
         chargesOnScene = (float[])charges.Clone();
         MainCamera = GameObject.Find("OVRCameraRig").transform;
         player = GameObject.Find("OVRPlayerController");
+
+        characterController = player.GetComponent<CharacterController>();
+        trackingSpace = player.transform.GetChild(1).GetChild(0);
+
         setupCurrentScene();
 
         nX = dimension;
@@ -1079,19 +1085,20 @@ public class SimulationController : MonoBehaviour
 
     void resetPlayerPosition()
     {
-        var OVRplayer = player.transform.GetChild(1).GetChild(0); //.GetComponent<OVRPlayerController>();
-        //OVRplayer.enabled = false;
-        OVRplayer.position = new Vector3(0.0f, OVRplayer.position.y, -15f);
-        OVRplayer.rotation = Quaternion.identity;
-        //OVRplayer.enabled = true;
+        characterController.enabled = false;
+        player.transform.position = new Vector3(0.0f, player.transform.position.y, -18f);
+        player.transform.rotation = Quaternion.identity;
+        trackingSpace.rotation = Quaternion.identity;
+        characterController.enabled = true;
     }
 
     void moveToLobby()
     {
-        var OVRplayer = player.transform.GetChild(1).GetChild(0); //.GetComponent<OVRPlayerController>();
-        OVRplayer.transform.position = new Vector3(-185.0f, OVRplayer.position.y, -6f);
-        OVRplayer.rotation = Quaternion.identity;
-
+        characterController.enabled = false;
+        player.transform.position = new Vector3(-165.0f, player.transform.position.y, -18f);
+        player.transform.rotation = Quaternion.identity;
+        trackingSpace.rotation = Quaternion.identity;
+        characterController.enabled = true;
     }
 
     void getUserID()
