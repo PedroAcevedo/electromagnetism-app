@@ -29,8 +29,6 @@ public class SceneController : MonoBehaviour
         controller = new UserReportController();
         characterController = player.GetComponent<CharacterController>();
 
-        Debug.Log("Delimitated user controller");
-
         introScene = new SceneData();
         controller.SceneInfo(introScene);
 

@@ -292,48 +292,6 @@ public class SimulationController : MonoBehaviour
         {
             setMesh();
         }
-
-        for (int i = 0; i < QuadrantsLimits.Count; ++i)
-        {
-            Debug.Log(QuadrantsElements[i]);
-        }
-
-        Debug.Log("Max value -->" + maxCharge);
-        Debug.Log("Min value -->" + minCharge);
-
-        //for (int i = 0; i < points.Length - 1; ++i)
-        //{
-        //    if (points[i].z == 0)
-        //    {
-        //        GameObject duplicate = Instantiate(reference);
-        //        duplicate.transform.position = new Vector3(points[i].x, points[i].y, points[i].z);
-        //        GameObject duplicateText = Instantiate(referenceText);
-        //        duplicateText.GetComponent<TextMeshPro>().text = i + " - " + points[i].x.ToString("F2") + "," + points[i].y.ToString("F2") + "," + points[i].z.ToString("F2");
-        //        duplicateText.transform.position = new Vector3(points[i].x, points[i].y, points[i].z);
-        //    }
-        //}
-
-        //int contSpheres = 0;
-        //if (meshFilter && DEBUG_GRID)
-        //{
-        //for (int i = 0; i < points.Length - 1; ++i)
-        //{
-        //    if (points[i].z < 0.4 && points[i].z > 0 && pointsCharges[i] > 0) //pointsCharges[i] == 0 && points[i].x > particles[1].transform.position.x && particles[0].transform.position.x > points[i].x && 20 > contSpheres )
-        //    {
-        //        GameObject duplicate = Instantiate(arrowInField);
-        //        duplicate.transform.position = new Vector3(points[i].x, points[i].y, points[i].z);
-        //        duplicate.transform.Rotate(0.0f, 0.0f, pointsAngles[i]);
-        //        GameObject duplicateText = Instantiate(referenceText);
-        //        duplicateText.GetComponent<TextMeshPro>().text = pointsCharges[i] + "";
-        //        duplicateText.transform.position = new Vector3(points[i].x - 0.25f, points[i].y - 0.3f, points[i].z);
-        //        //contSpheres++;
-        //    }
-        //}
-        //}
-        //    var savePath = "Assets/electric.asset";
-        //    Debug.Log("Saved Mesh to:" + savePath);
-        //    AssetDatabase.CreateAsset(meshFilter.mesh, savePath);
-        //}
     }
 
     public void setMesh()
@@ -415,10 +373,7 @@ public class SimulationController : MonoBehaviour
     {
         points = new Vector4[(nX + 1) * (nY + 1) * (nZ + 1)];
         pointsCharges = new float[(nX + 1) * (nY + 1) * (nZ + 1)];
-        //pointsAngles = new float[(nX + 1) * (nY + 1) * (nZ + 1)];
         stepSize = new Vector3((float)(MAXX - MINX) / (float)nX, (float)(MAXX - MINY) / (float)nY, (float)(MAXZ - MINZ) / (float)nZ);
-
-        Debug.Log(stepSize);
 
         int YtimesZ = (nY + 1) * (nY + 1);    //for extra speed
         for (int i = 0; i < nX + 1; ++i)
@@ -451,8 +406,6 @@ public class SimulationController : MonoBehaviour
         {
             points[i].w = electromagnetism3(new Vector3(points[i].x, points[i].y, points[i].z));/*(step 3)*/
             pointsCharges[i] = (float)Math.Log10((float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z))));
-            //pointsCharges[i] = (float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z)));//(float)Math.Log10((float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z))));//(float)(int)Math.Abs(electromagnetismCharge(new Vector3(points[i].x, points[i].y, points[i].z))); 
-            //pointsAngles[i] = angle(new Vector3(points[i].x, points[i].y, points[i].z));
 
             if (pointsCharges[i] > maxCharge)
             {

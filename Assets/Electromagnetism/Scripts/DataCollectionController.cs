@@ -21,8 +21,6 @@ public class DataCollectionController
         {
             scene.rightHandButtonPress += 1;
             mappingButtons[0] = true;
-            Debug.Log(OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.RTouch));
-
         }
         else
         {
@@ -36,7 +34,6 @@ public class DataCollectionController
         {
             scene.rightHandButtonPress += 1;
             mappingButtons[1] = true;
-            Debug.Log(OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch));
 
         }
         else
@@ -53,7 +50,6 @@ public class DataCollectionController
         {
             scene.leftHandButtonPress += 1;
             mappingButtons[2] = true;
-            Debug.Log(OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.LTouch));
 
         }
         else
@@ -68,8 +64,6 @@ public class DataCollectionController
         {
             scene.leftHandButtonPress += 1;
             mappingButtons[3] = true;
-            Debug.Log(OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch));
-
         }
         else
         {
