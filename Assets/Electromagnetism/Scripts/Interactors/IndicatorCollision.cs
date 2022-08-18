@@ -10,7 +10,6 @@ public class IndicatorCollision : MonoBehaviour
     {
         if (other.gameObject.name.Contains("Particle"))
         {
-            Debug.Log("Particle Inside");
             currentParticle = other.gameObject;
         }
         
